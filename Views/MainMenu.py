@@ -1,11 +1,8 @@
-from csv import excel
-from fileinput import filename
 from tkinter import *
 import tkinter as tk
 from tkinter.ttk import *
 from tkinter import filedialog as fd
 from tkinter.messagebox import showinfo
-from turtle import color
 
 from Controllers.ExcelController import *
 

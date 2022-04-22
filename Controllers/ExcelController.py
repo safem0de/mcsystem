@@ -1,6 +1,3 @@
-from functools import reduce
-import operator
-from unittest import result
 import pandas as pd
 
 from datetime import datetime
@@ -20,6 +17,8 @@ class ExcelData:
         new_header = df.iloc[0] #grab the first row for the header
         df = df[1:] #take the data less the header row
         df.columns = new_header #set the header row as the df header
+
+        df.fillna( method ='ffill', inplace = True)
         
         df = df.drop(len(df))
         df = df.drop(columns=df.columns[9:14])
@@ -40,8 +39,9 @@ class ExcelData:
             elif type(value) == str :
                 df.loc[key,'ISSUE_DATE'] = datetime.strptime(value, "%d/%m/%Y")
             else:
-                print(type(value))
-                df.loc[key,'ISSUE_DATE'] = datetime.strptime(value, "%d/%m/%Y")
+                # print(type(value))
+                # df.loc[key,'ISSUE_DATE'] = datetime.strptime(value, "%d/%m/%Y")
+                df.loc[key,'ISSUE_DATE'] = value.to_pydatetime()
 
         df['ISSUE_DATE'] = pd.to_datetime(df['ISSUE_DATE'], format = "%Y-%m-%d", errors='ignore')
         df = df.sort_values(by=['ISSUE_DATE','M/O No.'])
