@@ -88,7 +88,7 @@ class MainMenu(Frame):
         def add_OnHand_File():
 
             filetypes = (
-                ('text files', '*.xlsx'),
+                ('Excel file', '*.xlsx'),
                 ('All files', '*.*')
             )
 
@@ -184,6 +184,8 @@ class MainMenu(Frame):
             self.tree_Shortage_Stator.configure(yscroll=scrollbar_Shortage_Stator.set)
             scrollbar_Shortage_Stator.grid(row=0, column=1, rowspan=20, pady=3, sticky=tk.NS)
 
+            self.Download_excel_btn = Button(self.f2, text='Download Excel File', command=lambda:selectFolder())
+            self.Download_excel_btn.grid(row=3, column=0, sticky=tk.NW)
 
             #### ======= Shaft Need to Order ===== ####
             self.tree_Shaft_not_enough = Treeview(self.lf_Shaft_not_enough, columns=self.on_hand_columns, show='headings')
@@ -261,7 +263,7 @@ class MainMenu(Frame):
         def select_file():
 
             filetypes = (
-                ('text files', '*.xlsx'),
+                ('Excel file', '*.xlsx'),
                 ('All files', '*.*')
             )
 
@@ -384,3 +386,13 @@ class MainMenu(Frame):
                 self.tree_Sap.insert('', tk.END, values=data)
 
             self.tree_Sap.grid(row=0, column=0, rowspan=20, pady=3, sticky=tk.NS)
+
+        def selectFolder():
+            filename =fd.askdirectory(
+                title = 'Testt',
+                )
+
+            showinfo(
+                    title = 'Selected File',
+                    message = filename
+                )
