@@ -1,5 +1,6 @@
 from functools import reduce
 import operator
+from unittest import result
 import pandas as pd
 
 from datetime import datetime
@@ -46,14 +47,46 @@ class ExcelData:
         df = df.sort_values(by=['ISSUE_DATE','M/O No.'])
         self.__rawData = df
 
+
+    def readExcelStock(self,filedir):
+        df = pd.read_excel(filedir, sheet_name='Recieve')
+        new_header = df.iloc[0] #grab the first row for the header
+        df = df[1:] #take the data less the header row
+        df.columns = new_header #set the header row as the df header
+        
+        result = self.__onHand
+
+        # for part in df.iloc[:,0]:
+        #     print(part)
+
+        for row_index,row in df.iterrows():
+            # print(df.iloc[row_index-1][0])
+            x = df.iloc[row_index-1][0]
+            y = df.iloc[row_index-1][1]
+            try:
+                # print(x)
+                # print(result.get(x))
+                result[x] = result.get(x) + int(y)
+            except Exception as e:
+                # result[x] = int(y)
+                print(e)
+
     def createRawDataHeader(self):
         return tuple(self.__rawData.columns)
 
     def createRawData(self):
         return self.__rawData.values.tolist()
 
-    def createOnHandData(self,typeofOnHand):
+    def createOnHandData(self):
         result = {}
+        df = self.__rawData
+        for row_index,row in df.iterrows():
+            result[df.loc[row_index,'Item No.']] = df.loc[row_index,"Mat't_Onhand"]
+
+        self.__onHand = result
+
+    def createOnHandData_type(self,typeofOnHand):
+        result = self.__onHand
         sap_other = []
         shaft = []
         rotor = []
@@ -61,13 +94,6 @@ class ExcelData:
         spacer = []
         stator = []
         flange = []
-
-        df = self.__rawData
-        for row_index,row in df.iterrows():
-            result[df.loc[row_index,'Item No.']] = df.loc[row_index,"Mat't_Onhand"]
-
-        # print(result)
-        self.__onHand = result
 
         for k in result:
             if '10' in str(k)[:2]:
@@ -103,7 +129,6 @@ class ExcelData:
             return sap_other
 
     def createRequestPartData(self,typeofOnHand):
-        result = {}
         sap_other = []
         shaft = []
         rotor = []

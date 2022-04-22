@@ -13,9 +13,6 @@ class MainMenu(Frame):
 
     excel = ExcelData()
     # excel.readExcel(filename)
-    excel.readExcel('D:\My Documents\Desktop\MES Project\MC Program.xlsx')
-    columns = excel.createRawDataHeader()
-    on_hand_columns = ('Item No.','Qty')
 
     def __init__(self, parent):
         super().__init__(parent)
@@ -44,54 +41,55 @@ class MainMenu(Frame):
         self.nb.add(self.f2, text=self.alignments[2])
 
         self.lf_Shaft = LabelFrame(self.f1, text='Shaft')
-        self.lf_Shaft.grid(row=0, column=0, sticky=tk.W)
+        self.lf_Shaft.grid(row=1, column=0, sticky=tk.W)
 
         self.lf_Shaft_not_enough = LabelFrame(self.f1, text='Shaft ไม่พอจ่าย !!')
-        self.lf_Shaft_not_enough.grid(row=1, column=0, sticky=tk.W)
+        self.lf_Shaft_not_enough.grid(row=2, column=0, sticky=tk.W)
 
         self.lf_Rotor = LabelFrame(self.f1, text='Rotor Stack')
-        self.lf_Rotor.grid(row=0, column=1, sticky=tk.W)
+        self.lf_Rotor.grid(row=1, column=1, sticky=tk.W)
 
         self.lf_Rotor_not_enough = LabelFrame(self.f1, text='Rotor Stack ไม่พอจ่าย !!')
-        self.lf_Rotor_not_enough.grid(row=1, column=1, sticky=tk.W)
+        self.lf_Rotor_not_enough.grid(row=2, column=1, sticky=tk.W)
 
         self.lf_Magnet = LabelFrame(self.f1, text='Magnet')
-        self.lf_Magnet.grid(row=0, column=2, sticky=tk.W)
+        self.lf_Magnet.grid(row=1, column=2, sticky=tk.W)
 
         self.lf_Magnet_not_enough = LabelFrame(self.f1, text='Magnet ไม่พอจ่าย !!')
-        self.lf_Magnet_not_enough.grid(row=1, column=2, sticky=tk.W)
+        self.lf_Magnet_not_enough.grid(row=2, column=2, sticky=tk.W)
         
         self.lf_Spacer = LabelFrame(self.f1, text='Spacer')
-        self.lf_Spacer.grid(row=0, column=3, sticky=tk.W)
+        self.lf_Spacer.grid(row=1, column=3, sticky=tk.W)
 
         self.lf_Spacer_not_enough = LabelFrame(self.f1, text='Spacer ไม่พอจ่าย !!')
-        self.lf_Spacer_not_enough.grid(row=1, column=3, sticky=tk.W)
+        self.lf_Spacer_not_enough.grid(row=2, column=3, sticky=tk.W)
 
         self.lf_Stator = LabelFrame(self.f1, text='Stator Stack')
-        self.lf_Stator.grid(row=0, column=4, sticky=tk.W)
+        self.lf_Stator.grid(row=1, column=4, sticky=tk.W)
 
         self.lf_Stator_not_enough = LabelFrame(self.f1, text='Stator Stack ไม่พอจ่าย !!')
-        self.lf_Stator_not_enough.grid(row=1, column=4, sticky=tk.W)
+        self.lf_Stator_not_enough.grid(row=2, column=4, sticky=tk.W)
 
         self.lf_Sap = LabelFrame(self.f1, text='SAP No.')
-        self.lf_Sap.grid(row=0, column=5, sticky=tk.W)
+        self.lf_Sap.grid(row=1, column=5, sticky=tk.W)
 
         self.lf_Sap_not_enough = LabelFrame(self.f1, text='SAP No. ไม่พอจ่าย !!')
-        self.lf_Sap_not_enough.grid(row=1, column=5, sticky=tk.W)
+        self.lf_Sap_not_enough.grid(row=2, column=5, sticky=tk.W)
 
         self.lf_RT_available = LabelFrame(self.f2, text='Rotor จ่ายได้')
-        self.lf_RT_available.grid(row=0, column=0, sticky=tk.W)
+        self.lf_RT_available.grid(row=1, column=0, sticky=tk.W)
 
         self.lf_RT_notavailable = LabelFrame(self.f2, text='Rotor จ่ายไม่ได้')
-        self.lf_RT_notavailable.grid(row=1, column=0, sticky=tk.W)
+        self.lf_RT_notavailable.grid(row=2, column=0, sticky=tk.W)
 
         self.lf_ST_available = LabelFrame(self.f2, text='Stator จ่ายได้')
-        self.lf_ST_available.grid(row=0, column=1, sticky=tk.W)
+        self.lf_ST_available.grid(row=1, column=1, sticky=tk.W)
 
         self.lf_ST_notavailable = LabelFrame(self.f2, text='Stator จ่ายไม่ได้')
-        self.lf_ST_notavailable.grid(row=1, column=1, sticky=tk.W)
+        self.lf_ST_notavailable.grid(row=2, column=1, sticky=tk.W)
 
         def add_OnHand_File():
+
             filetypes = (
                 ('text files', '*.xlsx'),
                 ('All files', '*.*')
@@ -112,8 +110,14 @@ class MainMenu(Frame):
                     title = 'Selected File',
                     message = 'File Not Found!!!'
                 )
+                return
 
+            # self.excel.createOnHandData()
+            # self.excel.readExcelStock('D:\My Documents\Desktop\MES Project\sample.xlsx')
+            self.excel.createOnHandData()
+            self.excel.readExcelStock(filename)
             self.excel.create_Before_After()
+            OnHand()
 
             ### ======= Daily Stock Rotor Available ===== ####
             h1 = self.excel.createDailyHeader()
@@ -252,39 +256,39 @@ class MainMenu(Frame):
                 self.tree_Sap_not_enough.column(col, minwidth=0, width=90, stretch=False, anchor=tk.E)
 
             for data in self.excel.createRequestPartData('sap'):
-                if data[1] < 0:
-                    self.tree_Sap_not_enough.insert('', tk.END, values=data, tags=('fg'))
-                else:
-                    self.tree_Sap_not_enough.insert('', tk.END, values=data)
-
-            style = Style()
-            style.map('Treeview',background=[('selected', 'green')])
+                self.tree_Sap_not_enough.insert('', tk.END, values=data)
 
             self.tree_Sap_not_enough.grid(row=0, column=0, rowspan=20, pady=3, sticky=tk.NS)
 
 
         def select_file():
-            # filetypes = (
-            #     ('text files', '*.xlsx'),
-            #     ('All files', '*.*')
-            # )
 
-            # filename = fd.askopenfilename(
-            #     title = 'Open a file',
-            #     initialdir = '/',
-            #     filetypes = filetypes)
+            filetypes = (
+                ('text files', '*.xlsx'),
+                ('All files', '*.*')
+            )
 
-            # if not filename == "":
-            #     showinfo(
-            #         title = 'Selected File',
-            #         message = filename
-            #     )
-            # else:
-            #     showinfo(
-            #         title = 'Selected File',
-            #         message = 'File Not Found!!!'
-            #     )
+            filename = fd.askopenfilename(
+                title = 'Open a file',
+                initialdir = '/',
+                filetypes = filetypes)
 
+            if not filename == "":
+                showinfo(
+                    title = 'Selected File',
+                    message = filename
+                )
+            else:
+                showinfo(
+                    title = 'Selected File',
+                    message = 'File Not Found!!!'
+                )
+                return
+
+            # self.excel.readExcel('D:\My Documents\Desktop\MES Project\MC Program.xlsx')
+            self.excel.readExcel(filename)
+            self.columns = self.excel.createRawDataHeader()
+            self.on_hand_columns = ('Item No.','Qty')
             datas = self.excel.createRawData()
 
             self.tree_rawData = Treeview(self.f0, columns=self.columns, show='headings')
@@ -302,6 +306,10 @@ class MainMenu(Frame):
             self.tree_rawData.configure(yscroll=scrollbar.set)
             scrollbar.grid(row=0, column=1, rowspan=20, pady=3, sticky=tk.NS)
 
+            self.Add_Stock_btn = Button(self.f1, text='Add On Hand from File', command=lambda:add_OnHand_File())
+            self.Add_Stock_btn.grid(row=0, column=0, sticky=tk.NW)
+
+        def OnHand():
             #### ======= Shaft OnHand Stock ===== ####
 
             self.tree_Shaft = Treeview(self.lf_Shaft, columns=self.on_hand_columns, show='headings')
@@ -310,7 +318,7 @@ class MainMenu(Frame):
                 self.tree_Shaft.heading(col, text = col)
                 self.tree_Shaft.column(col, minwidth=0, width=90, stretch=False, anchor=tk.E)
 
-            for data in self.excel.createOnHandData('shaft'):
+            for data in self.excel.createOnHandData_type('shaft'):
                 self.tree_Shaft.insert('', tk.END, values=data)
 
             self.tree_Shaft.grid(row=0, column=0, rowspan=20, pady=3, sticky=tk.NS)
@@ -323,13 +331,10 @@ class MainMenu(Frame):
                 self.tree_Rotor.heading(col, text = col)
                 self.tree_Rotor.column(col, minwidth=0, width=90, stretch=False, anchor=tk.E)
 
-            for data in self.excel.createOnHandData('rotor'):
+            for data in self.excel.createOnHandData_type('rotor'):
                 self.tree_Rotor.insert('', tk.END, values=data)
 
             self.tree_Rotor.grid(row=0, column=0, rowspan=20, pady=3, sticky=tk.NS)
-
-            # self.open_Rotor_btn = Button(self.lf_Rotor, text='Add On Hand from File')
-            # self.open_Rotor_btn.grid(row=21, column=0, sticky=tk.E)
 
             #### ======= Magnet OnHand Stock ===== ####
 
@@ -339,7 +344,7 @@ class MainMenu(Frame):
                 self.tree_Magnet.heading(col, text = col)
                 self.tree_Magnet.column(col, minwidth=0, width=90, stretch=False, anchor=tk.E)
 
-            for data in self.excel.createOnHandData('magnet'):
+            for data in self.excel.createOnHandData_type('magnet'):
                 self.tree_Magnet.insert('', tk.END, values=data)
 
             self.tree_Magnet.grid(row=0, column=0, rowspan=20, pady=3, sticky=tk.NS)
@@ -352,7 +357,7 @@ class MainMenu(Frame):
                 self.tree_Spacer.heading(col, text = col)
                 self.tree_Spacer.column(col, minwidth=0, width=90, stretch=False, anchor=tk.E)
 
-            for data in self.excel.createOnHandData('spacer'):
+            for data in self.excel.createOnHandData_type('spacer'):
                 self.tree_Spacer.insert('', tk.END, values=data)
 
             self.tree_Spacer.grid(row=0, column=0, rowspan=20, pady=3, sticky=tk.NS)
@@ -365,7 +370,7 @@ class MainMenu(Frame):
                 self.tree_Stator.heading(col, text = col)
                 self.tree_Stator.column(col, minwidth=0, width=90, stretch=False, anchor=tk.E)
 
-            for data in self.excel.createOnHandData('stator'):
+            for data in self.excel.createOnHandData_type('stator'):
                 self.tree_Stator.insert('', tk.END, values=data)
 
             self.tree_Stator.grid(row=0, column=0, rowspan=20, pady=3, sticky=tk.NS)
@@ -378,10 +383,7 @@ class MainMenu(Frame):
                 self.tree_Sap.heading(col, text = col)
                 self.tree_Sap.column(col, minwidth=0, width=90, stretch=False, anchor=tk.E)
 
-            for data in self.excel.createOnHandData('sap'):
+            for data in self.excel.createOnHandData_type('sap'):
                 self.tree_Sap.insert('', tk.END, values=data)
 
             self.tree_Sap.grid(row=0, column=0, rowspan=20, pady=3, sticky=tk.NS)
-
-            self.Add_Stock_btn = Button(self.f1, text='Add On Hand from File', command=lambda:add_OnHand_File())
-            self.Add_Stock_btn.grid(row=0, column=6, sticky=tk.SE)
