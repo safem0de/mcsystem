@@ -406,7 +406,7 @@ class MainMenu(Frame):
                 return
 
             x = datetime.datetime.now()
-            y = x.strftime("%d-%b-%y")
+            y = x.strftime("%d-%b-%y %H%M%S")
 
             data_frame1 = self.excel.createDailyIssue('rotor')
             data_frame2 = self.excel.createShortage('rotor')
@@ -423,6 +423,6 @@ class MainMenu(Frame):
 
             showinfo(
                 title = 'File Created',
-                message = 'Happy to working!! by Safem0de'
+                message = 'Happy working!! by Safem0de'
                 )
 
