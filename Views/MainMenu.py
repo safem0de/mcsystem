@@ -5,6 +5,7 @@ from tkinter import filedialog as fd
 from tkinter.messagebox import showinfo
 
 from Controllers.ExcelController import *
+import datetime
 
 class MainMenu(Frame):
 
@@ -389,10 +390,39 @@ class MainMenu(Frame):
 
         def selectFolder():
             filename =fd.askdirectory(
-                title = 'Testt',
+                title = 'Select Folder for Save Data',
                 )
 
+            if filename != "":
+                showinfo(
+                        title = 'File will save in this Folder',
+                        message = filename
+                    )
+            else:
+                showinfo(
+                        title = 'File will save in this Folder',
+                        message = 'No Folder Directory selected'
+                    )
+                return
+
+            x = datetime.datetime.now()
+            y = x.strftime("%d-%b-%y")
+
+            data_frame1 = self.excel.createDailyIssue('rotor')
+            data_frame2 = self.excel.createShortage('rotor')
+            data_frame3 = self.excel.createDailyIssue('stator')
+            data_frame4 = self.excel.createShortage('stator')
+
+            with pd.ExcelWriter(f"{filename}\\MC_{y}.xlsx") as writer:
+                # use to_excel function and specify the sheet_name and index
+                # to store the dataframe in specified sheet
+                data_frame1.to_excel(writer, sheet_name="Rotor จ่ายได้", index=False)
+                data_frame2.to_excel(writer, sheet_name="Rotor จ่ายไม่ได้", index=False)
+                data_frame3.to_excel(writer, sheet_name="Stator จ่ายได้", index=False)
+                data_frame4.to_excel(writer, sheet_name="Stator จ่ายไม่ได้", index=False)
+
             showinfo(
-                    title = 'Selected File',
-                    message = filename
+                title = 'File Created',
+                message = 'Happy to working!! by Safem0de'
                 )
+
