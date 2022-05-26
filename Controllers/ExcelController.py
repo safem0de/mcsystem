@@ -6,8 +6,12 @@ class ExcelData:
 
     __rawData = pd.DataFrame()
     __before_after = pd.DataFrame()
+    __Instead = pd.DataFrame()
+
     __onHand = dict()
     __onHand_AIssue = dict()
+    __onHand_Instead = dict()
+
 
     def __init__(self):
         pass
@@ -56,9 +60,6 @@ class ExcelData:
         
         result = self.__onHand
 
-        # for part in df.iloc[:,0]:
-        #     print(part)
-
         for row_index,row in df.iterrows():
             # print(df.iloc[row_index-1][0])
             x = df.iloc[row_index-1][0]
@@ -68,7 +69,6 @@ class ExcelData:
                 # print(result.get(x))
                 result[x] = result.get(x) + int(y)
             except Exception as e:
-                # result[x] = int(y)
                 print(e)
 
     def createRawDataHeader(self):
@@ -190,6 +190,26 @@ class ExcelData:
         self.__onHand_AIssue = res
         self.__before_after = df
 
+    def create_Instead(self):
+        df  = self.__rawData.copy()
+        res = self.__onHand.copy()
+
+        df = df[["ISSUE_DATE", "M/O No.", "Model", "Item No.", "M/O Qty.", "ALC Qty."]]
+        
+        for row_index,row in df.iterrows():
+            
+            x = float(res.get(df.loc[row_index,'Item No.']))
+            y = float(df.loc[row_index,'ALC Qty.'])
+
+            if x - y >= 0 :
+                df.loc[row_index,'B/Issue'] = x
+                df.loc[row_index,'A/Issue'] = x - y
+                res[df.loc[row_index,'Item No.']] = df.loc[row_index,'A/Issue']
+                df = df.drop(row_index)
+        
+        self.__onHand_Instead = res
+        self.__Instead = df
+
     def createDailyHeader(self):
         return tuple(self.__before_after.columns)
 
@@ -217,7 +237,7 @@ class ExcelData:
 
         return df
 
-    def createShortage(self,p_type):
+    def createShortage(self, p_type):
         df0 = self.__before_after.copy()
         df1 = self.createDailyIssue('rotor')
         df2 = self.createDailyIssue('stator')
@@ -240,3 +260,8 @@ class ExcelData:
                 df0 = df0.drop(row_index)
         
         return df0
+
+    def createInsteadIssue(self):
+        self.create_Instead()
+        print(self.__onHand_Instead)
+        print(self.__Instead)

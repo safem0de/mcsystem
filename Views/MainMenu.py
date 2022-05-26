@@ -1,8 +1,10 @@
+from threading import Thread
 from tkinter import *
 import tkinter as tk
 from tkinter.ttk import *
-from tkinter import filedialog as fd
+from tkinter import filedialog as fd, font, ttk
 from tkinter.messagebox import showinfo
+from turtle import color
 
 from Controllers.ExcelController import *
 import datetime
@@ -10,29 +12,32 @@ import datetime
 class MainMenu(Frame):
 
     excel = ExcelData()
-    # excel.readExcel(filename)
 
     def __init__(self, parent):
         super().__init__(parent)
 
         #create widgets
-        self.labelheader = Label(self, text = 'MC Mecha2')
-        self.labelheader.grid(row=0, column=0, sticky=tk.W)
+        self.labelheader = Label(self, text = 'MC Mecha2', font=("Impact", 25))
+        self.labelheader.grid(row=0, column=0, sticky=tk.NW)
+
+        self.style = ttk.Style()
+        self.style.configure('TNotebook.Tab', font=('Bahnschrift SemiLight Condensed', 14))
+        self.style.configure('big.TButton', font=('Bahnschrift SemiBold', 12), foreground = "blue4")
 
         # open file button
-        self.open_button = Button(self,text='Open a File',command=lambda:select_file())
-        self.open_button.grid(row=0, column=1, sticky=tk.E)
+        self.open_button = Button(self,text='Open a File', command=lambda:select_file(), style='big.TButton')
+        self.open_button.grid(row=0, column=1, sticky=tk.EW)
 
-        self.lf = LabelFrame(self, text='Datas prepared by Safem0de')
-        self.lf.grid(row=1, column=0, columnspan=20, sticky=tk.W)
+        self.lf = LabelFrame(self, text='Datas prepared by Safem0de ')
+        self.lf.grid(row=1, column=0, rowspan=20, columnspan=20 ,sticky=tk.EW)
 
         self.alignments = ('Raw Data','On Hand', 'Daily Issue')
-        self.nb = Notebook(self.lf)
-        self.nb.grid(column=0, row=0, ipadx=10, ipady=10)
+        self.nb = Notebook(self.lf, width=int(self.winfo_screenwidth()*0.75)-40, height=int((self.winfo_screenheight()*0.75)-150))
+        self.nb.grid(column=0, row=0, ipadx=10, ipady=10, sticky=tk.NSEW)
 
-        self.f0 = Frame(self.nb, width=1024, height=280, name=self.alignments[0].replace(" ","_").lower())
-        self.f1 = Frame(self.nb, width=1024, height=280, name=self.alignments[1].replace(" ","_").lower())
-        self.f2 = Frame(self.nb, width=1024, height=280, name=self.alignments[2].replace(" ","_").lower())
+        self.f0 = Frame(self.nb, name=self.alignments[0].replace(" ","_").lower())
+        self.f1 = Frame(self.nb, name=self.alignments[1].replace(" ","_").lower())
+        self.f2 = Frame(self.nb, name=self.alignments[2].replace(" ","_").lower())
 
         self.nb.add(self.f0, text=self.alignments[0])
         self.nb.add(self.f1, text=self.alignments[1])
@@ -86,6 +91,9 @@ class MainMenu(Frame):
         self.lf_ST_notavailable = LabelFrame(self.f2, text='Stator จ่ายไม่ได้')
         self.lf_ST_notavailable.grid(row=2, column=1, sticky=tk.W)
 
+        self.lf_RT_instead = LabelFrame(self.f2, text='Rotor จ่ายแทน')
+        self.lf_RT_instead.grid(row=3, column=0, sticky=tk.W)
+
         def add_OnHand_File():
 
             filetypes = (
@@ -110,11 +118,10 @@ class MainMenu(Frame):
                 )
                 return
 
-            # self.excel.createOnHandData()
-            # self.excel.readExcelStock('D:\My Documents\Desktop\MES Project\sample.xlsx')
             self.excel.createOnHandData()
             self.excel.readExcelStock(filename)
             self.excel.create_Before_After()
+
             OnHand()
 
             ### ======= Daily Stock Rotor Available ===== ####
@@ -185,8 +192,9 @@ class MainMenu(Frame):
             self.tree_Shortage_Stator.configure(yscroll=scrollbar_Shortage_Stator.set)
             scrollbar_Shortage_Stator.grid(row=0, column=1, rowspan=20, pady=3, sticky=tk.NS)
 
+            #### ======= Download Excel ===== ####
             self.Download_excel_btn = Button(self.f2, text='Download Excel File', command=lambda:selectFolder())
-            self.Download_excel_btn.grid(row=3, column=0, sticky=tk.NW)
+            self.Download_excel_btn.grid(row=5, column=0, sticky=tk.NW)
 
             #### ======= Shaft Need to Order ===== ####
             self.tree_Shaft_not_enough = Treeview(self.lf_Shaft_not_enough, columns=self.on_hand_columns, show='headings')
@@ -285,7 +293,6 @@ class MainMenu(Frame):
                 )
                 return
 
-            # self.excel.readExcel('D:\My Documents\Desktop\MES Project\MC Program.xlsx')
             self.excel.readExcel(filename)
             self.columns = self.excel.createRawDataHeader()
             self.on_hand_columns = ('Item No.','Qty')
@@ -300,13 +307,13 @@ class MainMenu(Frame):
             for data in datas:
                 self.tree_rawData.insert('', tk.END, values=data)
 
-            self.tree_rawData.grid(row=0, column=0, rowspan=20, pady=3, sticky=tk.NSEW)
+            self.tree_rawData.grid(row=0, column=0, pady=3, sticky=tk.NS)
 
             scrollbar = Scrollbar(self.f0, orient=tk.VERTICAL, command=self.tree_rawData.yview)
             self.tree_rawData.configure(yscroll=scrollbar.set)
-            scrollbar.grid(row=0, column=1, rowspan=20, pady=3, sticky=tk.NS)
+            scrollbar.grid(row=0, column=1, pady=3, sticky=tk.NS)
 
-            self.Add_Stock_btn = Button(self.f1, text='Add On Hand from File', command=lambda:add_OnHand_File())
+            self.Add_Stock_btn = Button(self.f1, text='Add On Hand from File', command=lambda:add_OnHand_File(), style='big.TButton')
             self.Add_Stock_btn.grid(row=0, column=0, sticky=tk.NW)
 
         def OnHand():
@@ -413,13 +420,15 @@ class MainMenu(Frame):
             data_frame3 = self.excel.createDailyIssue('stator')
             data_frame4 = self.excel.createShortage('stator')
 
+            self.excel.createInsteadIssue()
+            
             with pd.ExcelWriter(f"{filename}\\MC_{y}.xlsx") as writer:
                 # use to_excel function and specify the sheet_name and index
                 # to store the dataframe in specified sheet
-                data_frame1.to_excel(writer, sheet_name="Rotor จ่ายได้", index=False)
-                data_frame2.to_excel(writer, sheet_name="Rotor จ่ายไม่ได้", index=False)
-                data_frame3.to_excel(writer, sheet_name="Stator จ่ายได้", index=False)
-                data_frame4.to_excel(writer, sheet_name="Stator จ่ายไม่ได้", index=False)
+                Thread(data_frame1.to_excel(writer, sheet_name="Rotor จ่ายได้", index=False)).start()
+                Thread(data_frame2.to_excel(writer, sheet_name="Rotor จ่ายไม่ได้", index=False)).start()
+                Thread(data_frame3.to_excel(writer, sheet_name="Stator จ่ายได้", index=False)).start()
+                Thread(data_frame4.to_excel(writer, sheet_name="Stator จ่ายไม่ได้", index=False)).start()
 
             showinfo(
                 title = 'File Created',
