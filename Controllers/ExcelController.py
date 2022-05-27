@@ -5,12 +5,11 @@ from datetime import datetime
 class ExcelData:
 
     __rawData = pd.DataFrame()
-    __before_after = pd.DataFrame()
-    __Instead = pd.DataFrame()
+    __AIssue = pd.DataFrame()
 
     __onHand = dict()
     __onHand_AIssue = dict()
-    __onHand_Instead = dict()
+
 
 
     def __init__(self):
@@ -28,9 +27,19 @@ class ExcelData:
         df = df.drop(columns=df.columns[9:14])
         df = df.drop(columns=df.columns[13:])
         df.fillna('-', inplace = True)
-        for key, value in df['M/O No.'].iteritems():
-            if 'HB' in str(value) or 'C' in str(value) or 'D' in str(value):
-                df = df.drop(key)
+
+        for row_index, row in df.iterrows():
+            if ('12' in str(row['Item No.'])[:2] or
+                '26' in str(row['Model'])[:2] or
+                '50' in str(row['Item No.'])[:2] or
+                '51' in str(row['Item No.'])[:2] or
+                'HB' in str(row['M/O No.']) or
+                'HM' in str(row['M/O No.']) or
+                'C' in str(row['M/O No.']) or
+                'C' in str(row['Model'])[0] or
+                'D' in str(row['M/O No.']) or
+                'P' in str(row['Item No.'])[0]):
+                df = df.drop(row_index)
 
         for key, value in df['ISSUE_DATE'].iteritems():
             if type(value) == datetime :
@@ -43,8 +52,6 @@ class ExcelData:
             elif type(value) == str :
                 df.loc[key,'ISSUE_DATE'] = datetime.strptime(value, "%d/%m/%Y")
             else:
-                # print(type(value))
-                # df.loc[key,'ISSUE_DATE'] = datetime.strptime(value, "%d/%m/%Y")
                 df.loc[key,'ISSUE_DATE'] = value.to_pydatetime()
 
         df['ISSUE_DATE'] = pd.to_datetime(df['ISSUE_DATE'], format = "%Y-%m-%d", errors='ignore')
@@ -81,7 +88,7 @@ class ExcelData:
         result = {}
         df = self.__rawData
         for row_index,row in df.iterrows():
-            result[df.loc[row_index,'Item No.']] = df.loc[row_index,"Mat't_Onhand"]
+            result[df.loc[row_index,'Item No.']] = float(df.loc[row_index,"Mat't_Onhand"])
 
         self.__onHand = result
 
@@ -172,25 +179,10 @@ class ExcelData:
         else:
             return sap_other
 
-    def create_Before_After(self):
-        df  = self.__rawData.copy()
-        res = self.__onHand.copy()
+    def createDailyHeader(self):
+        return tuple(self.__AIssue.columns)
 
-        df = df[["ISSUE_DATE", "M/O No.", "Model", "Item No.", "M/O Qty.", "ALC Qty."]]
-        
-        for row_index,row in df.iterrows():
-            
-            x = float(res.get(df.loc[row_index,'Item No.']))
-            y = float(df.loc[row_index,'ALC Qty.'])
-
-            df.loc[row_index,'B/Issue'] = x
-            df.loc[row_index,'A/Issue'] = x - y
-            res[df.loc[row_index,'Item No.']] = df.loc[row_index,'A/Issue']
-        
-        self.__onHand_AIssue = res
-        self.__before_after = df
-
-    def create_Instead(self):
+    def create_After_Issue(self):
         df  = self.__rawData.copy()
         res = self.__onHand.copy()
 
@@ -205,17 +197,16 @@ class ExcelData:
                 df.loc[row_index,'B/Issue'] = x
                 df.loc[row_index,'A/Issue'] = x - y
                 res[df.loc[row_index,'Item No.']] = df.loc[row_index,'A/Issue']
-                df = df.drop(row_index)
+            else:
+                df.loc[row_index,'B/Issue'] = x
+                df.loc[row_index,'A/Issue'] = '-'
         
-        self.__onHand_Instead = res
-        self.__Instead = df
+        df.fillna('-', inplace = True)
+        self.__onHand_AIssue = res
+        self.__AIssue = df
 
-    def createDailyHeader(self):
-        return tuple(self.__before_after.columns)
-
-    # https://www.adamsmith.haus/python/answers/how-to-reorder-columns-in-a-pandas-dataframe-in-python
     def createDailyIssue(self, p_type) -> pd.DataFrame:
-        df = self.__before_after.copy()
+        df = self.__AIssue.copy()
 
         x = None
         y = None
@@ -228,17 +219,16 @@ class ExcelData:
             y = 'A'
             
         for row_index, row in df.iterrows():
-            if x in str(row['Model'])[:2] or x in str(row['Item No.'])[:2] or '51' in str(row['Item No.'])[:2] or y in str(row['M/O No.']):
+            if x in str(row['Model'])[:2] or x in str(row['Item No.'])[:2] or y in str(row['M/O No.']):
                 df = df.drop(row_index)
-            elif row['A/Issue'] < 0:
+            elif row['A/Issue'] == '-':
                 z = row['M/O No.']
                 a = df.index[df['M/O No.'] == z].to_list()
                 df = df.drop(a)
-
         return df
 
     def createShortage(self, p_type):
-        df0 = self.__before_after.copy()
+        df0 = self.__AIssue.copy()
         df1 = self.createDailyIssue('rotor')
         df2 = self.createDailyIssue('stator')
 
@@ -256,12 +246,7 @@ class ExcelData:
             y = 'A'
             
         for row_index, row in df0.iterrows():
-            if x in str(row['Model'])[:2] or x in str(row['Item No.'])[:2] or '51' in str(row['Item No.'])[:2] or y in str(row['M/O No.']):
+            if x in str(row['Model'])[:2] or x in str(row['Item No.'])[:2] or y in str(row['M/O No.']):
                 df0 = df0.drop(row_index)
         
         return df0
-
-    def createInsteadIssue(self):
-        self.create_Instead()
-        print(self.__onHand_Instead)
-        print(self.__Instead)

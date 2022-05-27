@@ -4,7 +4,9 @@ import tkinter as tk
 from tkinter.ttk import *
 from tkinter import filedialog as fd, font, ttk
 from tkinter.messagebox import showinfo
-from turtle import color
+
+import os, sys
+import importlib
 
 from Controllers.ExcelController import *
 import datetime
@@ -15,6 +17,11 @@ class MainMenu(Frame):
 
     def __init__(self, parent):
         super().__init__(parent)
+
+        if '_PYIBoot_SPLASH' in os.environ and importlib.util.find_spec("pyi_splash"):
+            import pyi_splash
+            pyi_splash.update_text('UI Loaded ...')
+            pyi_splash.close()
 
         #create widgets
         self.labelheader = Label(self, text = 'MC Mecha2', font=("Impact", 25))
@@ -31,52 +38,68 @@ class MainMenu(Frame):
         self.lf = LabelFrame(self, text='Datas prepared by Safem0de ')
         self.lf.grid(row=1, column=0, rowspan=20, columnspan=20 ,sticky=tk.EW)
 
-        self.alignments = ('Raw Data','On Hand', 'Daily Issue')
-        self.nb = Notebook(self.lf, width=int(self.winfo_screenwidth()*0.75)-40, height=int((self.winfo_screenheight()*0.75)-150))
+        self.alignments = ('Raw Data','On Hand', 'Daily Issue', 'Credits')
+        self.nb = Notebook(self.lf)
         self.nb.grid(column=0, row=0, ipadx=10, ipady=10, sticky=tk.NSEW)
 
         self.f0 = Frame(self.nb, name=self.alignments[0].replace(" ","_").lower())
         self.f1 = Frame(self.nb, name=self.alignments[1].replace(" ","_").lower())
         self.f2 = Frame(self.nb, name=self.alignments[2].replace(" ","_").lower())
+        self.f3 = Frame(self.nb, name=self.alignments[3].replace(" ","_").lower())
 
         self.nb.add(self.f0, text=self.alignments[0])
         self.nb.add(self.f1, text=self.alignments[1])
         self.nb.add(self.f2, text=self.alignments[2])
+        self.nb.add(self.f3, text=self.alignments[3])
+
+        ##################### ==== Credits ==== ######################
+        # Update programing details and                              #
+        # infomation of project maker                                #
+        ############################################################## 
+
+        try:
+            self.f = open(file=os.path.join(sys._MEIPASS, "Credits.txt"), encoding="utf8")
+            self.lblCredits = ttk.Label(self.f3, text=self.f.read())
+            self.lblCredits.grid(row=0, column=0, padx=3, pady=3, sticky=tk.NE)
+        except:
+            self.f = open("Credits.txt", encoding="utf8")
+            self.lblCredits = ttk.Label(self.f3, text=self.f.read())
+            self.lblCredits.grid(row=0, column=0, padx=3, pady=3, sticky=tk.NE)
 
         self.lf_Shaft = LabelFrame(self.f1, text='Shaft')
         self.lf_Shaft.grid(row=1, column=0, sticky=tk.W)
 
-        self.lf_Shaft_not_enough = LabelFrame(self.f1, text='Shaft ไม่พอจ่าย !!')
+        self.lf_Shaft_not_enough = LabelFrame(self.f1, text='Shaft Stock Balance !!')
         self.lf_Shaft_not_enough.grid(row=2, column=0, sticky=tk.W)
 
         self.lf_Rotor = LabelFrame(self.f1, text='Rotor Stack')
         self.lf_Rotor.grid(row=1, column=1, sticky=tk.W)
 
-        self.lf_Rotor_not_enough = LabelFrame(self.f1, text='Rotor Stack ไม่พอจ่าย !!')
+        self.lf_Rotor_not_enough = LabelFrame(self.f1, text='Rotor Stack Stock Balance !!')
         self.lf_Rotor_not_enough.grid(row=2, column=1, sticky=tk.W)
 
         self.lf_Magnet = LabelFrame(self.f1, text='Magnet')
         self.lf_Magnet.grid(row=1, column=2, sticky=tk.W)
 
-        self.lf_Magnet_not_enough = LabelFrame(self.f1, text='Magnet ไม่พอจ่าย !!')
+        self.lf_Magnet_not_enough = LabelFrame(self.f1, text='Magnet Stock Balance !!')
         self.lf_Magnet_not_enough.grid(row=2, column=2, sticky=tk.W)
         
         self.lf_Spacer = LabelFrame(self.f1, text='Spacer')
         self.lf_Spacer.grid(row=1, column=3, sticky=tk.W)
 
-        self.lf_Spacer_not_enough = LabelFrame(self.f1, text='Spacer ไม่พอจ่าย !!')
+        self.lf_Spacer_not_enough = LabelFrame(self.f1, text='Spacer Stock Balance !!')
         self.lf_Spacer_not_enough.grid(row=2, column=3, sticky=tk.W)
 
         self.lf_Stator = LabelFrame(self.f1, text='Stator Stack')
         self.lf_Stator.grid(row=1, column=4, sticky=tk.W)
 
-        self.lf_Stator_not_enough = LabelFrame(self.f1, text='Stator Stack ไม่พอจ่าย !!')
+        self.lf_Stator_not_enough = LabelFrame(self.f1, text='Stator Stack Stock Balance !!')
         self.lf_Stator_not_enough.grid(row=2, column=4, sticky=tk.W)
 
         self.lf_Sap = LabelFrame(self.f1, text='SAP No.')
         self.lf_Sap.grid(row=1, column=5, sticky=tk.W)
 
-        self.lf_Sap_not_enough = LabelFrame(self.f1, text='SAP No. ไม่พอจ่าย !!')
+        self.lf_Sap_not_enough = LabelFrame(self.f1, text='SAP No. Stock Balance !!')
         self.lf_Sap_not_enough.grid(row=2, column=5, sticky=tk.W)
 
         self.lf_RT_available = LabelFrame(self.f2, text='Rotor จ่ายได้')
@@ -118,9 +141,10 @@ class MainMenu(Frame):
                 )
                 return
 
-            self.excel.createOnHandData()
-            self.excel.readExcelStock(filename)
-            self.excel.create_Before_After()
+            Thread(self.excel.createOnHandData()).start()
+            Thread(self.excel.readExcelStock(filename)).start()
+
+            self.excel.create_After_Issue()
 
             OnHand()
 
@@ -193,7 +217,7 @@ class MainMenu(Frame):
             scrollbar_Shortage_Stator.grid(row=0, column=1, rowspan=20, pady=3, sticky=tk.NS)
 
             #### ======= Download Excel ===== ####
-            self.Download_excel_btn = Button(self.f2, text='Download Excel File', command=lambda:selectFolder())
+            self.Download_excel_btn = Button(self.f2, text='Download Excel File', command=lambda:selectFolder(), style='big.TButton')
             self.Download_excel_btn.grid(row=5, column=0, sticky=tk.NW)
 
             #### ======= Shaft Need to Order ===== ####
@@ -302,12 +326,12 @@ class MainMenu(Frame):
 
             for col in self.columns:
                 self.tree_rawData.heading(col, text = col)
-                self.tree_rawData.column(col, minwidth=0, width=90, stretch=False, anchor=tk.E)
+                self.tree_rawData.column(col, minwidth=0, width=90, anchor=tk.E)
 
             for data in datas:
                 self.tree_rawData.insert('', tk.END, values=data)
 
-            self.tree_rawData.grid(row=0, column=0, pady=3, sticky=tk.NS)
+            self.tree_rawData.grid(row=0, column=0, pady=3, sticky=tk.NSEW)
 
             scrollbar = Scrollbar(self.f0, orient=tk.VERTICAL, command=self.tree_rawData.yview)
             self.tree_rawData.configure(yscroll=scrollbar.set)
@@ -419,9 +443,8 @@ class MainMenu(Frame):
             data_frame2 = self.excel.createShortage('rotor')
             data_frame3 = self.excel.createDailyIssue('stator')
             data_frame4 = self.excel.createShortage('stator')
+            # data_frame5 = self.excel.createInsteadIssue()
 
-            self.excel.createInsteadIssue()
-            
             with pd.ExcelWriter(f"{filename}\\MC_{y}.xlsx") as writer:
                 # use to_excel function and specify the sheet_name and index
                 # to store the dataframe in specified sheet
