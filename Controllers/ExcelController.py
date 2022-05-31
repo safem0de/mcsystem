@@ -1,3 +1,4 @@
+from tabnanny import check
 import pandas as pd
 
 from datetime import datetime
@@ -10,7 +11,7 @@ class ExcelData:
     __onHand = dict()
     __onHand_AIssue = dict()
 
-
+    __needToOrder = dict()
 
     def __init__(self):
         pass
@@ -55,6 +56,7 @@ class ExcelData:
                 df.loc[key,'ISSUE_DATE'] = value.to_pydatetime()
 
         df['ISSUE_DATE'] = pd.to_datetime(df['ISSUE_DATE'], format = "%Y-%m-%d", errors='ignore')
+        df = df.astype({'M/O Qty.':'float','ALC Qty.':'float',"Mat't_Onhand":'float','Item No.':'str'})
         df = df.sort_values(by=['ISSUE_DATE','M/O No.'])
         self.__rawData = df
 
@@ -88,7 +90,7 @@ class ExcelData:
         result = {}
         df = self.__rawData
         for row_index,row in df.iterrows():
-            result[df.loc[row_index,'Item No.']] = float(df.loc[row_index,"Mat't_Onhand"])
+            result[str(df.loc[row_index,'Item No.'])] = float(df.loc[row_index,"Mat't_Onhand"])
 
         self.__onHand = result
 
@@ -182,24 +184,37 @@ class ExcelData:
     def createDailyHeader(self):
         return tuple(self.__AIssue.columns)
 
+    ##### https://www.geeksforgeeks.org/python-boolean-list-and-and-or-operations/
     def create_After_Issue(self):
         df  = self.__rawData.copy()
         res = self.__onHand.copy()
 
         df = df[["ISSUE_DATE", "M/O No.", "Model", "Item No.", "M/O Qty.", "ALC Qty."]]
-        
-        for row_index,row in df.iterrows():
-            
-            x = float(res.get(df.loc[row_index,'Item No.']))
-            y = float(df.loc[row_index,'ALC Qty.'])
 
-            if x - y >= 0 :
-                df.loc[row_index,'B/Issue'] = x
-                df.loc[row_index,'A/Issue'] = x - y
-                res[df.loc[row_index,'Item No.']] = df.loc[row_index,'A/Issue']
-            else:
-                df.loc[row_index,'B/Issue'] = x
-                df.loc[row_index,'A/Issue'] = '-'
+        for row_index,row in df.iterrows():
+            check = []
+            z = row['M/O No.']
+            a = df.index[df['M/O No.'] == z].to_list()
+
+            for i in a:
+                
+                stock = float(res.get(str(df.loc[i,'Item No.'])))
+                issue = float(df.loc[i,'ALC Qty.'])
+
+                if stock - issue >= 0:
+                    check.append(True)
+                else:
+                    check.append(False)
+
+                if len(check) == len(a) and all(check):
+                    for j in a:
+                
+                        _stock = float(res.get(str(df.loc[j,'Item No.'])))
+                        _issue = float(df.loc[j,'ALC Qty.'])
+
+                        df.loc[j,'B/Issue'] = _stock
+                        df.loc[j,'A/Issue'] = _stock - _issue
+                        res[str(df.loc[j,'Item No.'])] -= _issue
         
         df.fillna('-', inplace = True)
         self.__onHand_AIssue = res
@@ -228,6 +243,7 @@ class ExcelData:
         return df
 
     def createShortage(self, p_type):
+        res = self.__onHand_AIssue.copy()
         df0 = self.__AIssue.copy()
         df1 = self.createDailyIssue('rotor')
         df2 = self.createDailyIssue('stator')
@@ -248,5 +264,14 @@ class ExcelData:
         for row_index, row in df0.iterrows():
             if x in str(row['Model'])[:2] or x in str(row['Item No.'])[:2] or y in str(row['M/O No.']):
                 df0 = df0.drop(row_index)
+            else:
+                stock = float(res.get(str(df0.loc[row_index,'Item No.'])))
+                issue = float(df0.loc[row_index,'ALC Qty.'])
+
+                df0.loc[row_index,'B/Issue'] = stock
+                df0.loc[row_index,'A/Issue'] = stock - issue
+                res[str(df0.loc[row_index,'Item No.'])] -= issue
+
+        self.__needToOrder = res
         
         return df0

@@ -69,8 +69,11 @@ class MainMenu(Frame):
         self.lf_Shaft = LabelFrame(self.f1, text='Shaft')
         self.lf_Shaft.grid(row=1, column=0, sticky=tk.W)
 
-        self.lf_Shaft_not_enough = LabelFrame(self.f1, text='Shaft Stock Balance !!')
-        self.lf_Shaft_not_enough.grid(row=2, column=0, sticky=tk.W)
+        self.lf_Shaft_stock = LabelFrame(self.f1, text='Shaft Stock Balance !!')
+        self.lf_Shaft_stock.grid(row=2, column=0, sticky=tk.W)
+
+        self.lf_Shaft_not_enough = LabelFrame(self.f1, text='Shaft need to order !!')
+        self.lf_Shaft_not_enough.grid(row=3, column=0, sticky=tk.W)
 
         self.lf_Rotor = LabelFrame(self.f1, text='Rotor Stack')
         self.lf_Rotor.grid(row=1, column=1, sticky=tk.W)
@@ -113,9 +116,6 @@ class MainMenu(Frame):
 
         self.lf_ST_notavailable = LabelFrame(self.f2, text='Stator จ่ายไม่ได้')
         self.lf_ST_notavailable.grid(row=2, column=1, sticky=tk.W)
-
-        self.lf_RT_instead = LabelFrame(self.f2, text='Rotor จ่ายแทน')
-        self.lf_RT_instead.grid(row=3, column=0, sticky=tk.W)
 
         def add_OnHand_File():
 
@@ -220,6 +220,23 @@ class MainMenu(Frame):
             self.Download_excel_btn = Button(self.f2, text='Download Excel File', command=lambda:selectFolder(), style='big.TButton')
             self.Download_excel_btn.grid(row=5, column=0, sticky=tk.NW)
 
+            ##################### ==== Stock Page ==== ###################
+            # Update programing details and                              #
+            # infomation of project maker                                #
+            ############################################################## 
+
+            #### ======= Shaft Stock ===== ####
+            self.tree_Shaft_stock = Treeview(self.lf_Shaft_stock, columns=self.on_hand_columns, show='headings')
+
+            for col in self.on_hand_columns:
+                self.tree_Shaft_stock.heading(col, text = col)
+                self.tree_Shaft_stock.column(col, minwidth=0, width=90, stretch=False, anchor=tk.E)
+
+            for data in self.excel.createRequestPartData('shaft'):
+                self.tree_Shaft_stock.insert('', tk.END, values=data)
+
+            self.tree_Shaft_stock.grid(row=0, column=0, rowspan=20, pady=3, sticky=tk.NS)
+
             #### ======= Shaft Need to Order ===== ####
             self.tree_Shaft_not_enough = Treeview(self.lf_Shaft_not_enough, columns=self.on_hand_columns, show='headings')
 
@@ -230,7 +247,7 @@ class MainMenu(Frame):
             for data in self.excel.createRequestPartData('shaft'):
                 self.tree_Shaft_not_enough.insert('', tk.END, values=data)
 
-            self.tree_Shaft_not_enough.grid(row=0, column=0, rowspan=20, pady=3, sticky=tk.NS)
+            self.tree_Shaft_stock.grid(row=0, column=0, rowspan=20, pady=3, sticky=tk.NS)
 
             #### ======= Rotor Stack Need to Order ===== ####
             self.tree_Rotor_not_enough = Treeview(self.lf_Rotor_not_enough, columns=self.on_hand_columns, show='headings')
@@ -443,11 +460,10 @@ class MainMenu(Frame):
             data_frame2 = self.excel.createShortage('rotor')
             data_frame3 = self.excel.createDailyIssue('stator')
             data_frame4 = self.excel.createShortage('stator')
-            # data_frame5 = self.excel.createInsteadIssue()
 
             with pd.ExcelWriter(f"{filename}\\MC_{y}.xlsx") as writer:
-                # use to_excel function and specify the sheet_name and index
-                # to store the dataframe in specified sheet
+                ### use to_excel function and specify the sheet_name and index
+                ### to store the dataframe in specified sheet
                 Thread(data_frame1.to_excel(writer, sheet_name="Rotor จ่ายได้", index=False)).start()
                 Thread(data_frame2.to_excel(writer, sheet_name="Rotor จ่ายไม่ได้", index=False)).start()
                 Thread(data_frame3.to_excel(writer, sheet_name="Stator จ่ายได้", index=False)).start()

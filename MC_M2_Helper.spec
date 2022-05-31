@@ -8,7 +8,7 @@ a = Analysis(
     ['App.py'],
     pathex=[],
     binaries=[],
-    datas=[('MC SplashV0.2.png', 'Credits.txt')],
+    datas=[],
     hiddenimports=[],
     hookspath=[],
     hooksconfig={},
