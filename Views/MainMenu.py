@@ -52,6 +52,9 @@ class MainMenu(Frame):
         self.nb.add(self.f2, text=self.alignments[2])
         self.nb.add(self.f3, text=self.alignments[3])
 
+        canvas = tk.Canvas(self.f1)
+
+
         ##################### ==== Credits ==== ######################
         # Update programing details and                              #
         # infomation of project maker                                #
@@ -59,11 +62,11 @@ class MainMenu(Frame):
 
         try:
             self.f = open(file=os.path.join(sys._MEIPASS, "Credits.txt"), encoding="utf8")
-            self.lblCredits = ttk.Label(self.f3, text=self.f.read())
+            self.lblCredits = ttk.Label(self.f3, text=self.f.read(), font=(None, 8))
             self.lblCredits.grid(row=0, column=0, padx=3, pady=3, sticky=tk.NE)
         except:
             self.f = open("Credits.txt", encoding="utf8")
-            self.lblCredits = ttk.Label(self.f3, text=self.f.read())
+            self.lblCredits = ttk.Label(self.f3, text=self.f.read(), font=(None, 8))
             self.lblCredits.grid(row=0, column=0, padx=3, pady=3, sticky=tk.NE)
 
         self.lf_Shaft = LabelFrame(self.f1, text='Shaft')
@@ -72,38 +75,53 @@ class MainMenu(Frame):
         self.lf_Shaft_stock = LabelFrame(self.f1, text='Shaft Stock Balance !!')
         self.lf_Shaft_stock.grid(row=2, column=0, sticky=tk.W)
 
-        self.lf_Shaft_not_enough = LabelFrame(self.f1, text='Shaft need to order !!')
+        self.lf_Shaft_not_enough = LabelFrame(self.f1, text='Shaft need2order !!')
         self.lf_Shaft_not_enough.grid(row=3, column=0, sticky=tk.W)
 
         self.lf_Rotor = LabelFrame(self.f1, text='Rotor Stack')
         self.lf_Rotor.grid(row=1, column=1, sticky=tk.W)
 
-        self.lf_Rotor_not_enough = LabelFrame(self.f1, text='Rotor Stack Stock Balance !!')
-        self.lf_Rotor_not_enough.grid(row=2, column=1, sticky=tk.W)
+        self.lf_Rotor_stock = LabelFrame(self.f1, text='Rotor Stack Stock Balance !!')
+        self.lf_Rotor_stock.grid(row=2, column=1, sticky=tk.W)
+
+        self.lf_Rotor_not_enough = LabelFrame(self.f1, text='Rotor Stack need2order !!')
+        self.lf_Rotor_not_enough.grid(row=3, column=1, sticky=tk.W)
 
         self.lf_Magnet = LabelFrame(self.f1, text='Magnet')
         self.lf_Magnet.grid(row=1, column=2, sticky=tk.W)
 
-        self.lf_Magnet_not_enough = LabelFrame(self.f1, text='Magnet Stock Balance !!')
-        self.lf_Magnet_not_enough.grid(row=2, column=2, sticky=tk.W)
+        self.lf_Magnet_stock = LabelFrame(self.f1, text='Magnet Stock Balance !!')
+        self.lf_Magnet_stock.grid(row=2, column=2, sticky=tk.W)
+
+        self.lf_Magnet_not_enough = LabelFrame(self.f1, text='Magnet need2order !!')
+        self.lf_Magnet_not_enough.grid(row=3, column=2, sticky=tk.W)
         
         self.lf_Spacer = LabelFrame(self.f1, text='Spacer')
         self.lf_Spacer.grid(row=1, column=3, sticky=tk.W)
 
-        self.lf_Spacer_not_enough = LabelFrame(self.f1, text='Spacer Stock Balance !!')
-        self.lf_Spacer_not_enough.grid(row=2, column=3, sticky=tk.W)
+        self.lf_Spacer_stock = LabelFrame(self.f1, text='Spacer Stock Balance !!')
+        self.lf_Spacer_stock.grid(row=2, column=3, sticky=tk.W)
+
+        self.lf_Spacer_not_enough = LabelFrame(self.f1, text='Spacer need2order !!')
+        self.lf_Spacer_not_enough.grid(row=3, column=3, sticky=tk.W)
 
         self.lf_Stator = LabelFrame(self.f1, text='Stator Stack')
         self.lf_Stator.grid(row=1, column=4, sticky=tk.W)
 
-        self.lf_Stator_not_enough = LabelFrame(self.f1, text='Stator Stack Stock Balance !!')
-        self.lf_Stator_not_enough.grid(row=2, column=4, sticky=tk.W)
+        self.lf_Stator_stock = LabelFrame(self.f1, text='Stator Stack Stock Balance !!')
+        self.lf_Stator_stock.grid(row=2, column=4, sticky=tk.W)
+
+        self.lf_Stator_not_enough = LabelFrame(self.f1, text='Stator Stack need2order !!')
+        self.lf_Stator_not_enough.grid(row=3, column=4, sticky=tk.W)
 
         self.lf_Sap = LabelFrame(self.f1, text='SAP No.')
         self.lf_Sap.grid(row=1, column=5, sticky=tk.W)
 
-        self.lf_Sap_not_enough = LabelFrame(self.f1, text='SAP No. Stock Balance !!')
-        self.lf_Sap_not_enough.grid(row=2, column=5, sticky=tk.W)
+        self.lf_Sap_stock = LabelFrame(self.f1, text='SAP No. Stock Balance !!')
+        self.lf_Sap_stock.grid(row=2, column=5, sticky=tk.W)
+
+        self.lf_Sap_not_enough = LabelFrame(self.f1, text='SAP No. need2order !!')
+        self.lf_Sap_not_enough.grid(row=3, column=5, sticky=tk.W)
 
         self.lf_RT_available = LabelFrame(self.f2, text='Rotor จ่ายได้')
         self.lf_RT_available.grid(row=1, column=0, sticky=tk.W)
@@ -223,7 +241,9 @@ class MainMenu(Frame):
             ##################### ==== Stock Page ==== ###################
             # Update programing details and                              #
             # infomation of project maker                                #
-            ############################################################## 
+            ##############################################################
+
+            
 
             #### ======= Shaft Stock ===== ####
             self.tree_Shaft_stock = Treeview(self.lf_Shaft_stock, columns=self.on_hand_columns, show='headings')
@@ -247,7 +267,19 @@ class MainMenu(Frame):
             for data in self.excel.createRequestPartData('shaft'):
                 self.tree_Shaft_not_enough.insert('', tk.END, values=data)
 
-            self.tree_Shaft_stock.grid(row=0, column=0, rowspan=20, pady=3, sticky=tk.NS)
+            self.tree_Shaft_not_enough.grid(row=0, column=0, rowspan=20, pady=3, sticky=tk.NS)
+
+            #### ======= Rotor Stack Stock ===== ####
+            self.tree_Rotor_stock = Treeview(self.lf_Rotor_stock, columns=self.on_hand_columns, show='headings')
+
+            for col in self.on_hand_columns:
+                self.tree_Rotor_stock.heading(col, text = col)
+                self.tree_Rotor_stock.column(col, minwidth=0, width=90, stretch=False, anchor=tk.E)
+
+            for data in self.excel.createRequestPartData('rotor'):
+                self.tree_Rotor_stock.insert('', tk.END, values=data)
+
+            self.tree_Rotor_stock.grid(row=0, column=0, rowspan=20, pady=3, sticky=tk.NS)
 
             #### ======= Rotor Stack Need to Order ===== ####
             self.tree_Rotor_not_enough = Treeview(self.lf_Rotor_not_enough, columns=self.on_hand_columns, show='headings')
@@ -260,6 +292,18 @@ class MainMenu(Frame):
                 self.tree_Rotor_not_enough.insert('', tk.END, values=data)
 
             self.tree_Rotor_not_enough.grid(row=0, column=0, rowspan=20, pady=3, sticky=tk.NS)
+
+            #### ======= Magnet Stock ===== ####
+            self.tree_Magnet_stock = Treeview(self.lf_Magnet_stock, columns=self.on_hand_columns, show='headings')
+
+            for col in self.on_hand_columns:
+                self.tree_Magnet_stock.heading(col, text = col)
+                self.tree_Magnet_stock.column(col, minwidth=0, width=90, stretch=False, anchor=tk.E)
+
+            for data in self.excel.createRequestPartData('magnet'):
+                self.tree_Magnet_stock.insert('', tk.END, values=data)
+
+            self.tree_Magnet_stock.grid(row=0, column=0, rowspan=20, pady=3, sticky=tk.NS)
 
             #### ======= Magnet Need to Order ===== ####
             self.tree_Magnet_not_enough = Treeview(self.lf_Magnet_not_enough, columns=self.on_hand_columns, show='headings')
@@ -274,6 +318,18 @@ class MainMenu(Frame):
             self.tree_Magnet_not_enough.grid(row=0, column=0, rowspan=20, pady=3, sticky=tk.NS)
 
             #### ======= Spacer Need to Order ===== ####
+            self.tree_Spacer_stock = Treeview(self.lf_Spacer_stock, columns=self.on_hand_columns, show='headings')
+
+            for col in self.on_hand_columns:
+                self.tree_Spacer_stock.heading(col, text = col)
+                self.tree_Spacer_stock.column(col, minwidth=0, width=90, stretch=False, anchor=tk.E)
+
+            for data in self.excel.createRequestPartData('spacer'):
+                self.tree_Spacer_stock.insert('', tk.END, values=data)
+
+            self.tree_Spacer_stock.grid(row=0, column=0, rowspan=20, pady=3, sticky=tk.NS)
+
+            #### ======= Spacer Need to Order ===== ####
             self.tree_Spacer_not_enough = Treeview(self.lf_Spacer_not_enough, columns=self.on_hand_columns, show='headings')
 
             for col in self.on_hand_columns:
@@ -284,6 +340,18 @@ class MainMenu(Frame):
                 self.tree_Spacer_not_enough.insert('', tk.END, values=data)
 
             self.tree_Spacer_not_enough.grid(row=0, column=0, rowspan=20, pady=3, sticky=tk.NS)
+
+            #### ======= Stator Stock ===== ####
+            self.tree_Stator_stock = Treeview(self.lf_Stator_stock, columns=self.on_hand_columns, show='headings')
+
+            for col in self.on_hand_columns:
+                self.tree_Stator_stock.heading(col, text = col)
+                self.tree_Stator_stock.column(col, minwidth=0, width=90, stretch=False, anchor=tk.E)
+
+            for data in self.excel.createRequestPartData('stator'):
+                self.tree_Stator_stock.insert('', tk.END, values=data)
+
+            self.tree_Stator_stock.grid(row=0, column=0, rowspan=20, pady=3, sticky=tk.NS)
 
             #### ======= Stator Need to Order ===== ####
             self.tree_Stator_not_enough = Treeview(self.lf_Stator_not_enough, columns=self.on_hand_columns, show='headings')
@@ -296,6 +364,18 @@ class MainMenu(Frame):
                 self.tree_Stator_not_enough.insert('', tk.END, values=data)
 
             self.tree_Stator_not_enough.grid(row=0, column=0, rowspan=20, pady=3, sticky=tk.NS)
+
+            #### ======= Sap Stock ===== ####
+            self.tree_Sap_stock = Treeview(self.lf_Sap_stock, columns=self.on_hand_columns, show='headings')
+
+            for col in self.on_hand_columns:
+                self.tree_Sap_stock.heading(col, text = col)
+                self.tree_Sap_stock.column(col, minwidth=0, width=90, stretch=False, anchor=tk.E)
+
+            for data in self.excel.createRequestPartData('sap'):
+                self.tree_Sap_stock.insert('', tk.END, values=data)
+
+            self.tree_Sap_stock.grid(row=0, column=0, rowspan=20, pady=3, sticky=tk.NS)
 
             #### ======= Sap Need to Order ===== ####
             self.tree_Sap_not_enough = Treeview(self.lf_Sap_not_enough, columns=self.on_hand_columns, show='headings')
@@ -350,14 +430,15 @@ class MainMenu(Frame):
 
             self.tree_rawData.grid(row=0, column=0, pady=3, sticky=tk.NSEW)
 
-            scrollbar = Scrollbar(self.f0, orient=tk.VERTICAL, command=self.tree_rawData.yview)
-            self.tree_rawData.configure(yscroll=scrollbar.set)
-            scrollbar.grid(row=0, column=1, pady=3, sticky=tk.NS)
+            self.scrollbar = Scrollbar(self.f0, orient=tk.VERTICAL, command=self.tree_rawData.yview)
+            self.tree_rawData.configure(yscroll=self.scrollbar.set)
+            self.scrollbar.grid(row=0, column=1, pady=3, sticky=tk.NS)
 
             self.Add_Stock_btn = Button(self.f1, text='Add On Hand from File', command=lambda:add_OnHand_File(), style='big.TButton')
             self.Add_Stock_btn.grid(row=0, column=0, sticky=tk.NW)
 
         def OnHand():
+
             #### ======= Shaft OnHand Stock ===== ####
 
             self.tree_Shaft = Treeview(self.lf_Shaft, columns=self.on_hand_columns, show='headings')

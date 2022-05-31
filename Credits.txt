@@ -19,5 +19,12 @@ V0.1 >> 23/04/2022
 V0.2 >> 27/05/2022
  - Bug Fixed.
     
-    V0.2.1 >> 31/05/2022
-    - Minor Bug Fixed.
+   V0.2.1 >> 31/05/2022
+   - Minor Bug Fixed.
+
+V0.3 >> 
+   - Add Need to Order.
+
+V0.4 >>
+   - Using BOT to get MO_ALLOCATE from iPBASSM.
+   *** best web i ever see, lol...
