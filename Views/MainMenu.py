@@ -7,6 +7,7 @@ from tkinter.messagebox import showinfo
 
 import os, sys
 import importlib
+from turtle import width
 
 from Controllers.ExcelController import *
 import datetime
@@ -35,25 +36,24 @@ class MainMenu(Frame):
         self.open_button = Button(self,text='Open a File', command=lambda:select_file(), style='big.TButton')
         self.open_button.grid(row=0, column=1, sticky=tk.EW)
 
+        # print(self.winfo_screenwidth(),self.winfo_screenheight())
+
         self.lf = LabelFrame(self, text='Datas prepared by Safem0de ')
-        self.lf.grid(row=1, column=0, rowspan=20, columnspan=20 ,sticky=tk.EW)
+        self.lf.grid(row=1, column=0, columnspan=100 ,sticky=tk.EW)
 
         self.alignments = ('Raw Data','On Hand', 'Daily Issue', 'Credits')
         self.nb = Notebook(self.lf)
         self.nb.grid(column=0, row=0, ipadx=10, ipady=10, sticky=tk.NSEW)
 
-        self.f0 = Frame(self.nb, name=self.alignments[0].replace(" ","_").lower())
-        self.f1 = Frame(self.nb, name=self.alignments[1].replace(" ","_").lower())
-        self.f2 = Frame(self.nb, name=self.alignments[2].replace(" ","_").lower())
-        self.f3 = Frame(self.nb, name=self.alignments[3].replace(" ","_").lower())
+        self.f0 = Frame(self.nb, name=self.alignments[0].replace(" ","_").lower(), width=int(self.winfo_screenwidth()*0.7),height=int(self.winfo_screenheight()*0.6))
+        self.f1 = Frame(self.nb, name=self.alignments[1].replace(" ","_").lower(), width=int(self.winfo_screenwidth()*0.7),height=int(self.winfo_screenheight()*0.6))
+        self.f2 = Frame(self.nb, name=self.alignments[2].replace(" ","_").lower(), width=int(self.winfo_screenwidth()*0.7),height=int(self.winfo_screenheight()*0.6))
+        self.f3 = Frame(self.nb, name=self.alignments[3].replace(" ","_").lower(), width=int(self.winfo_screenwidth()*0.7),height=int(self.winfo_screenheight()*0.6))
 
         self.nb.add(self.f0, text=self.alignments[0])
         self.nb.add(self.f1, text=self.alignments[1])
         self.nb.add(self.f2, text=self.alignments[2])
         self.nb.add(self.f3, text=self.alignments[3])
-
-        canvas = tk.Canvas(self.f1)
-
 
         ##################### ==== Credits ==== ######################
         # Update programing details and                              #
@@ -62,78 +62,12 @@ class MainMenu(Frame):
 
         try:
             self.f = open(file=os.path.join(sys._MEIPASS, "Credits.txt"), encoding="utf8")
-            self.lblCredits = ttk.Label(self.f3, text=self.f.read(), font=(None, 8))
+            self.lblCredits = ttk.Label(self.f3, text=self.f.read(), font=(None, 9))
             self.lblCredits.grid(row=0, column=0, padx=3, pady=3, sticky=tk.NE)
         except:
             self.f = open("Credits.txt", encoding="utf8")
-            self.lblCredits = ttk.Label(self.f3, text=self.f.read(), font=(None, 8))
-            self.lblCredits.grid(row=0, column=0, padx=3, pady=3, sticky=tk.NE)
-
-        self.lf_Shaft = LabelFrame(self.f1, text='Shaft')
-        self.lf_Shaft.grid(row=1, column=0, sticky=tk.W)
-
-        self.lf_Shaft_stock = LabelFrame(self.f1, text='Shaft Stock Balance !!')
-        self.lf_Shaft_stock.grid(row=2, column=0, sticky=tk.W)
-
-        self.lf_Shaft_not_enough = LabelFrame(self.f1, text='Shaft need2order !!')
-        self.lf_Shaft_not_enough.grid(row=3, column=0, sticky=tk.W)
-
-        self.lf_Rotor = LabelFrame(self.f1, text='Rotor Stack')
-        self.lf_Rotor.grid(row=1, column=1, sticky=tk.W)
-
-        self.lf_Rotor_stock = LabelFrame(self.f1, text='Rotor Stack Stock Balance !!')
-        self.lf_Rotor_stock.grid(row=2, column=1, sticky=tk.W)
-
-        self.lf_Rotor_not_enough = LabelFrame(self.f1, text='Rotor Stack need2order !!')
-        self.lf_Rotor_not_enough.grid(row=3, column=1, sticky=tk.W)
-
-        self.lf_Magnet = LabelFrame(self.f1, text='Magnet')
-        self.lf_Magnet.grid(row=1, column=2, sticky=tk.W)
-
-        self.lf_Magnet_stock = LabelFrame(self.f1, text='Magnet Stock Balance !!')
-        self.lf_Magnet_stock.grid(row=2, column=2, sticky=tk.W)
-
-        self.lf_Magnet_not_enough = LabelFrame(self.f1, text='Magnet need2order !!')
-        self.lf_Magnet_not_enough.grid(row=3, column=2, sticky=tk.W)
-        
-        self.lf_Spacer = LabelFrame(self.f1, text='Spacer')
-        self.lf_Spacer.grid(row=1, column=3, sticky=tk.W)
-
-        self.lf_Spacer_stock = LabelFrame(self.f1, text='Spacer Stock Balance !!')
-        self.lf_Spacer_stock.grid(row=2, column=3, sticky=tk.W)
-
-        self.lf_Spacer_not_enough = LabelFrame(self.f1, text='Spacer need2order !!')
-        self.lf_Spacer_not_enough.grid(row=3, column=3, sticky=tk.W)
-
-        self.lf_Stator = LabelFrame(self.f1, text='Stator Stack')
-        self.lf_Stator.grid(row=1, column=4, sticky=tk.W)
-
-        self.lf_Stator_stock = LabelFrame(self.f1, text='Stator Stack Stock Balance !!')
-        self.lf_Stator_stock.grid(row=2, column=4, sticky=tk.W)
-
-        self.lf_Stator_not_enough = LabelFrame(self.f1, text='Stator Stack need2order !!')
-        self.lf_Stator_not_enough.grid(row=3, column=4, sticky=tk.W)
-
-        self.lf_Sap = LabelFrame(self.f1, text='SAP No.')
-        self.lf_Sap.grid(row=1, column=5, sticky=tk.W)
-
-        self.lf_Sap_stock = LabelFrame(self.f1, text='SAP No. Stock Balance !!')
-        self.lf_Sap_stock.grid(row=2, column=5, sticky=tk.W)
-
-        self.lf_Sap_not_enough = LabelFrame(self.f1, text='SAP No. need2order !!')
-        self.lf_Sap_not_enough.grid(row=3, column=5, sticky=tk.W)
-
-        self.lf_RT_available = LabelFrame(self.f2, text='Rotor จ่ายได้')
-        self.lf_RT_available.grid(row=1, column=0, sticky=tk.W)
-
-        self.lf_RT_notavailable = LabelFrame(self.f2, text='Rotor จ่ายไม่ได้')
-        self.lf_RT_notavailable.grid(row=2, column=0, sticky=tk.W)
-
-        self.lf_ST_available = LabelFrame(self.f2, text='Stator จ่ายได้')
-        self.lf_ST_available.grid(row=1, column=1, sticky=tk.W)
-
-        self.lf_ST_notavailable = LabelFrame(self.f2, text='Stator จ่ายไม่ได้')
-        self.lf_ST_notavailable.grid(row=2, column=1, sticky=tk.W)
+            self.lblCredits = ttk.Label(self.f3, text=self.f.read(), font=(None, 9))
+            self.lblCredits.grid(row=0, column=0, padx=3, pady=3, sticky=tk.NE)    
 
         def add_OnHand_File():
 
@@ -165,6 +99,38 @@ class MainMenu(Frame):
             self.excel.create_After_Issue()
 
             OnHand()
+
+            self.canvas_set = Canvas(self.f2, width=int(self.nb.winfo_width()), height=int(self.nb.winfo_height()*0.8), highlightthickness=0)
+
+            scroll_x_set = Scrollbar(self.f2, orient="horizontal", command=self.canvas_set.xview)
+            scroll_y_set = Scrollbar(self.f2, orient="vertical", command=self.canvas_set.yview)
+
+            scrollable_frame_set = ttk.Frame(self.canvas_set)
+            scrollable_frame_set.bind(
+                "<Configure>",
+                lambda e: self.canvas_set.configure(
+                    scrollregion=self.canvas_set.bbox("all")
+                )
+            )
+
+            self.canvas_set.create_window((0, 0), window=scrollable_frame_set, anchor=tk.NW)
+            self.canvas_set.configure(yscrollcommand=scroll_y_set.set, xscrollcommand=scroll_x_set.set)
+
+            #### ======= Download Excel ===== ####
+            self.Download_excel_btn = Button(self.f2, text='Download Excel File', command=lambda:selectFolder(), style='big.TButton')
+            self.Download_excel_btn.grid(row=0, column=0, sticky=tk.NW)
+
+            self.lf_RT_available = LabelFrame(scrollable_frame_set, text='Rotor จ่ายได้')
+            self.lf_RT_available.grid(row=1, column=0, sticky=tk.W)
+
+            self.lf_RT_notavailable = LabelFrame(scrollable_frame_set, text='Rotor จ่ายไม่ได้')
+            self.lf_RT_notavailable.grid(row=2, column=0, sticky=tk.W)
+
+            self.lf_ST_available = LabelFrame(scrollable_frame_set, text='Stator จ่ายได้')
+            self.lf_ST_available.grid(row=1, column=1, sticky=tk.W)
+
+            self.lf_ST_notavailable = LabelFrame(scrollable_frame_set, text='Stator จ่ายไม่ได้')
+            self.lf_ST_notavailable.grid(row=2, column=1, sticky=tk.W)
 
             ### ======= Daily Stock Rotor Available ===== ####
             h1 = self.excel.createDailyHeader()
@@ -234,16 +200,16 @@ class MainMenu(Frame):
             self.tree_Shortage_Stator.configure(yscroll=scrollbar_Shortage_Stator.set)
             scrollbar_Shortage_Stator.grid(row=0, column=1, rowspan=20, pady=3, sticky=tk.NS)
 
-            #### ======= Download Excel ===== ####
-            self.Download_excel_btn = Button(self.f2, text='Download Excel File', command=lambda:selectFolder(), style='big.TButton')
-            self.Download_excel_btn.grid(row=5, column=0, sticky=tk.NW)
+            ################################################ CANVAS ################################################
+            self.canvas_set.grid(row=1,column=0, sticky=tk.EW)
+            scroll_x_set.grid(row=2, column=0, sticky=tk.EW+tk.S)
+            scroll_y_set.grid(row=1, column=1, sticky=tk.NS+tk.E)
+            ############################################ END OF CANVAS ############################################
 
             ##################### ==== Stock Page ==== ###################
             # Update programing details and                              #
             # infomation of project maker                                #
             ##############################################################
-
-            
 
             #### ======= Shaft Stock ===== ####
             self.tree_Shaft_stock = Treeview(self.lf_Shaft_stock, columns=self.on_hand_columns, show='headings')
@@ -264,7 +230,7 @@ class MainMenu(Frame):
                 self.tree_Shaft_not_enough.heading(col, text = col)
                 self.tree_Shaft_not_enough.column(col, minwidth=0, width=90, stretch=False, anchor=tk.E)
 
-            for data in self.excel.createRequestPartData('shaft'):
+            for data in self.excel.createNeedToOrder('shaft'):
                 self.tree_Shaft_not_enough.insert('', tk.END, values=data)
 
             self.tree_Shaft_not_enough.grid(row=0, column=0, rowspan=20, pady=3, sticky=tk.NS)
@@ -288,7 +254,7 @@ class MainMenu(Frame):
                 self.tree_Rotor_not_enough.heading(col, text = col)
                 self.tree_Rotor_not_enough.column(col, minwidth=0, width=90, stretch=False, anchor=tk.E)
 
-            for data in self.excel.createRequestPartData('rotor'):
+            for data in self.excel.createNeedToOrder('rotor'):
                 self.tree_Rotor_not_enough.insert('', tk.END, values=data)
 
             self.tree_Rotor_not_enough.grid(row=0, column=0, rowspan=20, pady=3, sticky=tk.NS)
@@ -312,7 +278,7 @@ class MainMenu(Frame):
                 self.tree_Magnet_not_enough.heading(col, text = col)
                 self.tree_Magnet_not_enough.column(col, minwidth=0, width=90, stretch=False, anchor=tk.E)
 
-            for data in self.excel.createRequestPartData('magnet'):
+            for data in self.excel.createNeedToOrder('magnet'):
                 self.tree_Magnet_not_enough.insert('', tk.END, values=data)
 
             self.tree_Magnet_not_enough.grid(row=0, column=0, rowspan=20, pady=3, sticky=tk.NS)
@@ -336,7 +302,7 @@ class MainMenu(Frame):
                 self.tree_Spacer_not_enough.heading(col, text = col)
                 self.tree_Spacer_not_enough.column(col, minwidth=0, width=90, stretch=False, anchor=tk.E)
 
-            for data in self.excel.createRequestPartData('spacer'):
+            for data in self.excel.createNeedToOrder('spacer'):
                 self.tree_Spacer_not_enough.insert('', tk.END, values=data)
 
             self.tree_Spacer_not_enough.grid(row=0, column=0, rowspan=20, pady=3, sticky=tk.NS)
@@ -360,7 +326,7 @@ class MainMenu(Frame):
                 self.tree_Stator_not_enough.heading(col, text = col)
                 self.tree_Stator_not_enough.column(col, minwidth=0, width=90, stretch=False, anchor=tk.E)
 
-            for data in self.excel.createRequestPartData('stator'):
+            for data in self.excel.createNeedToOrder('stator'):
                 self.tree_Stator_not_enough.insert('', tk.END, values=data)
 
             self.tree_Stator_not_enough.grid(row=0, column=0, rowspan=20, pady=3, sticky=tk.NS)
@@ -384,11 +350,33 @@ class MainMenu(Frame):
                 self.tree_Sap_not_enough.heading(col, text = col)
                 self.tree_Sap_not_enough.column(col, minwidth=0, width=90, stretch=False, anchor=tk.E)
 
-            for data in self.excel.createRequestPartData('sap'):
+            for data in self.excel.createNeedToOrder('sap'):
                 self.tree_Sap_not_enough.insert('', tk.END, values=data)
 
             self.tree_Sap_not_enough.grid(row=0, column=0, rowspan=20, pady=3, sticky=tk.NS)
 
+            ############################################ SEARCH ############################################
+
+            self.lblSearch = Label(self.f1, text = 'Search Parts: ', font=('Bahnschrift SemiBold', 12), foreground = "blue4")
+            self.lblSearch.grid(row=0, column=1, sticky=tk.NS+tk.E)
+
+            t_list = [self.tree_Shaft, self.tree_Shaft_stock, self.tree_Shaft_not_enough,
+                    self.tree_Rotor,self.tree_Rotor_stock,self.tree_Rotor_not_enough,
+                    self.tree_Magnet,self.tree_Magnet_stock,self.tree_Magnet_not_enough,
+                    self.tree_Spacer,self.tree_Spacer_stock,self.tree_Spacer_not_enough,
+                    self.tree_Stator,self.tree_Stator_stock,self.tree_Stator_not_enough,
+                    self.tree_Sap,self.tree_Sap_stock,self.tree_Sap_not_enough
+                    ]
+
+            self.search = tk.StringVar()
+            self.txtSearch = Entry(self.f1, textvariable=self.search)
+            self.txtSearch.grid(row=0, column=2, sticky=tk.NSEW)
+            self.txtSearch.bind("<Return>", lambda e: search(e, self.search, t_list))
+
+            self.Search_btn = Button(self.f1, text='Search', command=lambda e:search(e, self.search, t_list), style='big.TButton')
+            self.Search_btn.grid(row=0, column=3, sticky=tk.NS+tk.W)
+
+            ############################################ SEARCH ############################################
 
         def select_file():
 
@@ -438,6 +426,76 @@ class MainMenu(Frame):
             self.Add_Stock_btn.grid(row=0, column=0, sticky=tk.NW)
 
         def OnHand():
+
+            self.canvas = Canvas(self.f1, width=int(self.nb.winfo_width()), height=int(self.nb.winfo_height()*0.8), highlightthickness=0)
+
+            scroll_x = Scrollbar(self.f1, orient="horizontal", command=self.canvas.xview)
+            scroll_y = Scrollbar(self.f1, orient="vertical", command=self.canvas.yview)
+
+            scrollable_frame = ttk.Frame(self.canvas)
+            scrollable_frame.bind(
+                "<Configure>",
+                lambda e: self.canvas.configure(
+                    scrollregion=self.canvas.bbox("all")
+                )
+            )
+
+            self.canvas.create_window((0, 0), window=scrollable_frame, anchor=tk.NW)
+            self.canvas.configure(yscrollcommand=scroll_y.set, xscrollcommand=scroll_x.set)
+
+            self.lf_Shaft = LabelFrame(scrollable_frame, text='Shaft')
+            self.lf_Shaft.grid(row=1, column=0, sticky=tk.W)
+
+            self.lf_Shaft_stock = LabelFrame(scrollable_frame, text='Shaft Stock Balance !!')
+            self.lf_Shaft_stock.grid(row=2, column=0, sticky=tk.W)
+
+            self.lf_Shaft_not_enough = LabelFrame(scrollable_frame, text='Shaft need2order !!')
+            self.lf_Shaft_not_enough.grid(row=3, column=0, sticky=tk.W)
+
+            self.lf_Rotor = LabelFrame(scrollable_frame, text='Rotor Stack')
+            self.lf_Rotor.grid(row=1, column=1, sticky=tk.W)
+
+            self.lf_Rotor_stock = LabelFrame(scrollable_frame, text='Rotor Stack Stock Balance !!')
+            self.lf_Rotor_stock.grid(row=2, column=1, sticky=tk.W)
+
+            self.lf_Rotor_not_enough = LabelFrame(scrollable_frame, text='Rotor Stack need2order !!')
+            self.lf_Rotor_not_enough.grid(row=3, column=1, sticky=tk.W)
+
+            self.lf_Magnet = LabelFrame(scrollable_frame, text='Magnet')
+            self.lf_Magnet.grid(row=1, column=2, sticky=tk.W)
+
+            self.lf_Magnet_stock = LabelFrame(scrollable_frame, text='Magnet Stock Balance !!')
+            self.lf_Magnet_stock.grid(row=2, column=2, sticky=tk.W)
+
+            self.lf_Magnet_not_enough = LabelFrame(scrollable_frame, text='Magnet need2order !!')
+            self.lf_Magnet_not_enough.grid(row=3, column=2, sticky=tk.W)
+            
+            self.lf_Spacer = LabelFrame(scrollable_frame, text='Spacer')
+            self.lf_Spacer.grid(row=1, column=3, sticky=tk.W)
+
+            self.lf_Spacer_stock = LabelFrame(scrollable_frame, text='Spacer Stock Balance !!')
+            self.lf_Spacer_stock.grid(row=2, column=3, sticky=tk.W)
+
+            self.lf_Spacer_not_enough = LabelFrame(scrollable_frame, text='Spacer need2order !!')
+            self.lf_Spacer_not_enough.grid(row=3, column=3, sticky=tk.W)
+
+            self.lf_Stator = LabelFrame(scrollable_frame, text='Stator Stack')
+            self.lf_Stator.grid(row=1, column=4, sticky=tk.W)
+
+            self.lf_Stator_stock = LabelFrame(scrollable_frame, text='Stator Stack Stock Balance !!')
+            self.lf_Stator_stock.grid(row=2, column=4, sticky=tk.W)
+
+            self.lf_Stator_not_enough = LabelFrame(scrollable_frame, text='Stator Stack need2order !!')
+            self.lf_Stator_not_enough.grid(row=3, column=4, sticky=tk.W)
+
+            self.lf_Sap = LabelFrame(scrollable_frame, text='SAP No.')
+            self.lf_Sap.grid(row=1, column=5, sticky=tk.W)
+
+            self.lf_Sap_stock = LabelFrame(scrollable_frame, text='SAP No. Stock Balance !!')
+            self.lf_Sap_stock.grid(row=2, column=5, sticky=tk.W)
+
+            self.lf_Sap_not_enough = LabelFrame(scrollable_frame, text='SAP No. need2order !!')
+            self.lf_Sap_not_enough.grid(row=3, column=5, sticky=tk.W)
 
             #### ======= Shaft OnHand Stock ===== ####
 
@@ -517,6 +575,12 @@ class MainMenu(Frame):
 
             self.tree_Sap.grid(row=0, column=0, rowspan=20, pady=3, sticky=tk.NS)
 
+            ################################################ CANVAS ################################################
+            self.canvas.grid(row=1,column=0, columnspan=20, sticky=tk.EW)
+            scroll_x.grid(row=2, column=0, columnspan=20, sticky=tk.EW+tk.S)
+            scroll_y.grid(row=1, column=1, columnspan=20, sticky=tk.NS+tk.E)
+            ############################################ END OF CANVAS_ ############################################
+
         def selectFolder():
             filename =fd.askdirectory(
                 title = 'Select Folder for Save Data',
@@ -554,4 +618,17 @@ class MainMenu(Frame):
                 title = 'File Created',
                 message = 'Happy working!! by Safem0de'
                 )
+
+        def search(event, search_entry : StringVar, treelist : list):
+            query = search_entry.get()
+            # print(query)
+            for i in treelist:
+                selections = []
+                for child in i.get_children():
+                    # print(tree.item(child)['values'][0])
+                    if query.lower() in str(i.item(child)['values'][0]).lower():   # compare strings in  lower cases.
+                        # print(tree.item(child)['values'][0])
+                        selections.append(child)
+                # print('search completed')
+                i.selection_set(selections)
 

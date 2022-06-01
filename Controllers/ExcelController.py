@@ -138,6 +138,7 @@ class ExcelData:
             return sap_other
 
     def createRequestPartData(self,typeofOnHand):
+        result = self.__onHand_AIssue
         sap_other = []
         shaft = []
         rotor = []
@@ -146,7 +147,48 @@ class ExcelData:
         stator = []
         flange = []
 
-        result = self.__onHand_AIssue
+        for k in result:
+            if '10' in str(k)[:2]:
+                sap_other.append((k,result.get(k)))
+            elif '53' in str(k)[:2]:
+                shaft.append(((k,result.get(k))))
+            elif '26' in str(k)[:2]:
+                rotor.append(((k,result.get(k))))
+            elif '58' in str(k)[:2]:
+                magnet.append(((k,result.get(k))))
+            elif '56' in str(k)[:2]:
+                spacer.append(((k,result.get(k))))
+            elif '19' in str(k)[:2]:
+                stator.append(((k,result.get(k))))
+            elif '51' in str(k)[:2]:
+                flange.append(((k,result.get(k))))
+            else:
+                sap_other.append((k,result.get(k)))
+
+        if typeofOnHand == 'shaft':
+            return shaft
+        elif typeofOnHand == 'rotor':
+            return rotor
+        elif typeofOnHand == 'magnet':
+            return magnet
+        elif typeofOnHand == 'spacer':
+            return spacer
+        elif typeofOnHand == 'stator':
+            return stator
+        elif typeofOnHand == 'flange':
+            return flange
+        else:
+            return sap_other
+
+    def createNeedToOrder(self, typeofOnHand):
+        result = self.__needToOrder
+        sap_other = []
+        shaft = []
+        rotor = []
+        magnet = []
+        spacer = []
+        stator = []
+        flange = []
 
         for k in result:
             if '10' in str(k)[:2]:

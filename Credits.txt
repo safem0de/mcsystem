@@ -20,11 +20,14 @@ V0.2 >> 27/05/2022
  - Bug Fixed.
     
    V0.2.1 >> 31/05/2022
-   - Minor Bug Fixed.
+      - Minor Bug Fixed.
 
-V0.3 >> 
-   - Add Need to Order.
+   V0.2.2 >> 01/06/2022
+      - Add Need to Orders.
+      - Add Searching Stocks.
+      - New layout fixed and add scrollbar.
 
-V0.4 >>
+V0.3 >>
+   - Add warning mising or incorrect sheet.
    - Using BOT to get MO_ALLOCATE from iPBASSM.
    *** best web i ever see, lol...
