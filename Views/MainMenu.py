@@ -407,7 +407,7 @@ class MainMenu(Frame):
             self.on_hand_columns = ('Item No.','Qty')
             datas = self.excel.createRawData()
 
-            self.tree_rawData = Treeview(self.f0, columns=self.columns, show='headings')
+            self.tree_rawData = Treeview(self.f0, columns=self.columns, show='headings',height=20)
 
             for col in self.columns:
                 self.tree_rawData.heading(col, text = col)
