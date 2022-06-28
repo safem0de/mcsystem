@@ -76,22 +76,23 @@ class MainMenu(Frame):
                 ('All files', '*.*')
             )
 
-            filename = fd.askopenfilename(
-                title = 'Open a file',
-                initialdir = '/',
-                filetypes = filetypes)
+            filename = 'D:\\My Documents\\Desktop\\MES Project\\Data Vendor Conf.xlsx'
+            # filename = fd.askopenfilename(
+            #     title = 'Open a file',
+            #     initialdir = '/',
+            #     filetypes = filetypes)
 
-            if not filename == "":
-                showinfo(
-                    title = 'Selected File',
-                    message = filename
-                )
-            else:
-                showinfo(
-                    title = 'Selected File',
-                    message = 'File Not Found!!!'
-                )
-                return
+            # if not filename == "":
+            #     showinfo(
+            #         title = 'Selected File',
+            #         message = filename
+            #     )
+            # else:
+            #     showinfo(
+            #         title = 'Selected File',
+            #         message = 'File Not Found!!!'
+            #     )
+            #     return
 
             Thread(self.excel.createOnHandData()).start()
             Thread(self.excel.readExcelStock(filename)).start()
@@ -140,7 +141,7 @@ class MainMenu(Frame):
                 self.tree_Daily_Rotor.heading(col, text = col)
                 self.tree_Daily_Rotor.column(col, minwidth=0, width=90, stretch=False, anchor=tk.E)
 
-            for data in self.excel.createDailyIssue('rotor').values.tolist():
+            for data in []: #self.excel.createDailyIssue('rotor').values.tolist():
                 self.tree_Daily_Rotor.insert('', tk.END, values=data)
 
             self.tree_Daily_Rotor.grid(row=0, column=0, rowspan=20, pady=3, sticky=tk.NS)
@@ -157,7 +158,7 @@ class MainMenu(Frame):
                 self.tree_Daily_Stator.heading(col, text = col)
                 self.tree_Daily_Stator.column(col, minwidth=0, width=90, stretch=False, anchor=tk.E)
 
-            for data in self.excel.createDailyIssue('stator').values.tolist():
+            for data in []: #self.excel.createDailyIssue('stator').values.tolist():
                 self.tree_Daily_Stator.insert('', tk.END, values=data)
 
             self.tree_Daily_Stator.grid(row=0, column=0, rowspan=20, pady=3, sticky=tk.NS)
@@ -174,7 +175,7 @@ class MainMenu(Frame):
                 self.tree_Shortage_Rotor.heading(col, text = col)
                 self.tree_Shortage_Rotor.column(col, minwidth=0, width=90, stretch=False, anchor=tk.E)
 
-            for data in self.excel.createShortage('rotor').values.tolist():
+            for data in []: #self.excel.createShortage('rotor').values.tolist():
                 self.tree_Shortage_Rotor.insert('', tk.END, values=data)
 
             self.tree_Shortage_Rotor.grid(row=0, column=0, rowspan=20, pady=3, sticky=tk.NS)
@@ -191,7 +192,7 @@ class MainMenu(Frame):
                 self.tree_Shortage_Stator.heading(col, text = col)
                 self.tree_Shortage_Stator.column(col, minwidth=0, width=90, stretch=False, anchor=tk.E)
 
-            for data in self.excel.createShortage('stator').values.tolist():
+            for data in []: #self.excel.createShortage('stator').values.tolist():
                 self.tree_Shortage_Stator.insert('', tk.END, values=data)
 
             self.tree_Shortage_Stator.grid(row=0, column=0, rowspan=20, pady=3, sticky=tk.NS)
@@ -218,7 +219,7 @@ class MainMenu(Frame):
                 self.tree_Shaft_stock.heading(col, text = col)
                 self.tree_Shaft_stock.column(col, minwidth=0, width=90, stretch=False, anchor=tk.E)
 
-            for data in self.excel.createRequestPartData('shaft'):
+            for data in []: #self.excel.createRequestPartData('shaft'):
                 self.tree_Shaft_stock.insert('', tk.END, values=data)
 
             self.tree_Shaft_stock.grid(row=0, column=0, rowspan=20, pady=3, sticky=tk.NS)
@@ -230,7 +231,7 @@ class MainMenu(Frame):
                 self.tree_Shaft_not_enough.heading(col, text = col)
                 self.tree_Shaft_not_enough.column(col, minwidth=0, width=90, stretch=False, anchor=tk.E)
 
-            for data in self.excel.createNeedToOrder('shaft'):
+            for data in []: #self.excel.createNeedToOrder('shaft'):
                 self.tree_Shaft_not_enough.insert('', tk.END, values=data)
 
             self.tree_Shaft_not_enough.grid(row=0, column=0, rowspan=20, pady=3, sticky=tk.NS)
@@ -242,7 +243,7 @@ class MainMenu(Frame):
                 self.tree_Rotor_stock.heading(col, text = col)
                 self.tree_Rotor_stock.column(col, minwidth=0, width=90, stretch=False, anchor=tk.E)
 
-            for data in self.excel.createRequestPartData('rotor'):
+            for data in []: #self.excel.createRequestPartData('rotor'):
                 self.tree_Rotor_stock.insert('', tk.END, values=data)
 
             self.tree_Rotor_stock.grid(row=0, column=0, rowspan=20, pady=3, sticky=tk.NS)
@@ -266,7 +267,7 @@ class MainMenu(Frame):
                 self.tree_Magnet_stock.heading(col, text = col)
                 self.tree_Magnet_stock.column(col, minwidth=0, width=90, stretch=False, anchor=tk.E)
 
-            for data in self.excel.createRequestPartData('magnet'):
+            for data in []: #self.excel.createRequestPartData('magnet'):
                 self.tree_Magnet_stock.insert('', tk.END, values=data)
 
             self.tree_Magnet_stock.grid(row=0, column=0, rowspan=20, pady=3, sticky=tk.NS)
@@ -278,7 +279,7 @@ class MainMenu(Frame):
                 self.tree_Magnet_not_enough.heading(col, text = col)
                 self.tree_Magnet_not_enough.column(col, minwidth=0, width=90, stretch=False, anchor=tk.E)
 
-            for data in self.excel.createNeedToOrder('magnet'):
+            for data in []: #self.excel.createNeedToOrder('magnet'):
                 self.tree_Magnet_not_enough.insert('', tk.END, values=data)
 
             self.tree_Magnet_not_enough.grid(row=0, column=0, rowspan=20, pady=3, sticky=tk.NS)
@@ -290,7 +291,7 @@ class MainMenu(Frame):
                 self.tree_Spacer_stock.heading(col, text = col)
                 self.tree_Spacer_stock.column(col, minwidth=0, width=90, stretch=False, anchor=tk.E)
 
-            for data in self.excel.createRequestPartData('spacer'):
+            for data in []: #self.excel.createRequestPartData('spacer'):
                 self.tree_Spacer_stock.insert('', tk.END, values=data)
 
             self.tree_Spacer_stock.grid(row=0, column=0, rowspan=20, pady=3, sticky=tk.NS)
@@ -302,7 +303,7 @@ class MainMenu(Frame):
                 self.tree_Spacer_not_enough.heading(col, text = col)
                 self.tree_Spacer_not_enough.column(col, minwidth=0, width=90, stretch=False, anchor=tk.E)
 
-            for data in self.excel.createNeedToOrder('spacer'):
+            for data in []: #self.excel.createNeedToOrder('spacer'):
                 self.tree_Spacer_not_enough.insert('', tk.END, values=data)
 
             self.tree_Spacer_not_enough.grid(row=0, column=0, rowspan=20, pady=3, sticky=tk.NS)
@@ -314,7 +315,7 @@ class MainMenu(Frame):
                 self.tree_Stator_stock.heading(col, text = col)
                 self.tree_Stator_stock.column(col, minwidth=0, width=90, stretch=False, anchor=tk.E)
 
-            for data in self.excel.createRequestPartData('stator'):
+            for data in []: #self.excel.createRequestPartData('stator'):
                 self.tree_Stator_stock.insert('', tk.END, values=data)
 
             self.tree_Stator_stock.grid(row=0, column=0, rowspan=20, pady=3, sticky=tk.NS)
@@ -326,7 +327,7 @@ class MainMenu(Frame):
                 self.tree_Stator_not_enough.heading(col, text = col)
                 self.tree_Stator_not_enough.column(col, minwidth=0, width=90, stretch=False, anchor=tk.E)
 
-            for data in self.excel.createNeedToOrder('stator'):
+            for data in []: #self.excel.createNeedToOrder('stator'):
                 self.tree_Stator_not_enough.insert('', tk.END, values=data)
 
             self.tree_Stator_not_enough.grid(row=0, column=0, rowspan=20, pady=3, sticky=tk.NS)
@@ -338,7 +339,7 @@ class MainMenu(Frame):
                 self.tree_Sap_stock.heading(col, text = col)
                 self.tree_Sap_stock.column(col, minwidth=0, width=90, stretch=False, anchor=tk.E)
 
-            for data in self.excel.createRequestPartData('sap'):
+            for data in []: #self.excel.createRequestPartData('sap'):
                 self.tree_Sap_stock.insert('', tk.END, values=data)
 
             self.tree_Sap_stock.grid(row=0, column=0, rowspan=20, pady=3, sticky=tk.NS)
@@ -350,7 +351,7 @@ class MainMenu(Frame):
                 self.tree_Sap_not_enough.heading(col, text = col)
                 self.tree_Sap_not_enough.column(col, minwidth=0, width=90, stretch=False, anchor=tk.E)
 
-            for data in self.excel.createNeedToOrder('sap'):
+            for data in []: #self.excel.createNeedToOrder('sap'):
                 self.tree_Sap_not_enough.insert('', tk.END, values=data)
 
             self.tree_Sap_not_enough.grid(row=0, column=0, rowspan=20, pady=3, sticky=tk.NS)
@@ -371,9 +372,9 @@ class MainMenu(Frame):
             self.search = tk.StringVar()
             self.txtSearch = Entry(self.f1, textvariable=self.search)
             self.txtSearch.grid(row=0, column=2, sticky=tk.NSEW)
-            self.txtSearch.bind("<Return>", lambda e: search(e, self.search, t_list))
+            self.txtSearch.bind("<Return>", lambda : search(self.txtSearch, t_list))
 
-            self.Search_btn = Button(self.f1, text='Search', command=lambda e:search(e, self.search, t_list), style='big.TButton')
+            self.Search_btn = Button(self.f1, text='Search', command=lambda :search(self.txtSearch, t_list), style='big.TButton')
             self.Search_btn.grid(row=0, column=3, sticky=tk.NS+tk.W)
 
             ############################################ SEARCH ############################################
@@ -385,22 +386,23 @@ class MainMenu(Frame):
                 ('All files', '*.*')
             )
 
-            filename = fd.askopenfilename(
-                title = 'Open a file',
-                initialdir = '/',
-                filetypes = filetypes)
+            filename = 'D:\\My Documents\\Desktop\\MES Project\\MO Balance 22.06.27.xlsx'
+            # filename = fd.askopenfilename(
+            #     title = 'Open a file',
+            #     initialdir = '/',
+            #     filetypes = filetypes)
 
-            if not filename == "":
-                showinfo(
-                    title = 'Selected File',
-                    message = filename
-                )
-            else:
-                showinfo(
-                    title = 'Selected File',
-                    message = 'File Not Found!!!'
-                )
-                return
+            # if not filename == "":
+            #     showinfo(
+            #         title = 'Selected File',
+            #         message = filename
+            #     )
+            # else:
+            #     showinfo(
+            #         title = 'Selected File',
+            #         message = 'File Not Found!!!'
+            #     )
+            #     return
 
             self.excel.readExcel(filename)
             self.columns = self.excel.createRawDataHeader()
@@ -619,7 +621,7 @@ class MainMenu(Frame):
                 message = 'Happy working!! by Safem0de'
                 )
 
-        def search(event, search_entry : StringVar, treelist : list):
+        def search(search_entry : StringVar, treelist : list):
             query = search_entry.get()
             # print(query)
             for i in treelist:

@@ -1,4 +1,4 @@
-('D:\\PythonProject\\mcsystem\\MC SplashV0.2.png',
+('D:\\PythonProject\\mcsystem\\MC_Splash.png',
  'D:\\PythonProject\\mcsystem\\build\\MC_M2_Helper\\Splash-00.res',
  'D:\\PythonProject\\mcsystem\\build\\MC_M2_Helper\\Splash-00_script.tcl',
  None,
