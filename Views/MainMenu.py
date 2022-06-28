@@ -7,7 +7,6 @@ from tkinter.messagebox import showinfo
 
 import os, sys
 import importlib
-from turtle import width
 
 from Controllers.ExcelController import *
 import datetime

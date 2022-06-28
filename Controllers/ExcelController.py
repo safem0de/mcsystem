@@ -1,3 +1,4 @@
+from tabnanny import check
 import pandas as pd
 import tkinter.messagebox as MsgBox
 
@@ -245,43 +246,80 @@ class ExcelData:
         df = df[["ISSUE_DATE", "M/O No.", "Model",
                  "Item No.", "M/O Qty.", "ALC Qty."]]
 
-        for row_index, row in df.iterrows():
-            check = []
-            z = row['M/O No.']
-            a = df.index[df['M/O No.'] == z].to_list()
+        dict_index = dict()
 
-            for i in a:
+        for r_i,r in df.iterrows():
+            __part = dict()
+
+            z = r['M/O No.']
+            a = df.index[df['M/O No.'] == z].to_list()
+            
+            __part[z] = {'index': a}
+            dict_index.update(__part)
+
+        for k, v in dict_index.items():
+            check = []
+            can_issue = dict()
+            print(k)
+            for i in v['index']:
+                print(i)
 
                 stock = float(res.get(str(df.loc[i, 'Item No.'])))
                 issue = float(df.loc[i, 'ALC Qty.'])
 
-                if stock - issue >= 0:
+                if stock >= issue:
                     check.append(True)
                 else:
                     check.append(False)
 
-                if len(check) == len(a) and all(check):
-                    for j in a:
+                if len(check) == len(v['index']):
+                    dict_index.get(k).update({'can_issue': all(check)})
+                
 
-                        if str(df.loc[j, 'Item No.']) == '10000062686':
-                            print(str(df.loc[j, 'Item No.']), float(
-                                res.get(str(df.loc[j, 'Item No.']))), float(df.loc[j, 'ALC Qty.']))
+        # for row_index, row in df.iterrows():
+        #     check = []
+        #     z = row['M/O No.']
+        #     a = df.index[df['M/O No.'] == z].to_list()
 
-                        _stock = float(res.get(str(df.loc[j, 'Item No.'])))
-                        _issue = float(df.loc[j, 'ALC Qty.'])
+            # set_of_index.add(a)
+            
+            # for i in a:
 
-                        df.loc[j, 'B/Issue'] = _stock
-                        df.loc[j, 'A/Issue'] = _stock - _issue
-                        res[str(df.loc[j, 'Item No.'])] = float(
-                            df.loc[j, 'A/Issue'])
+            #     print(i)
+            #     stock = float(res.get(str(df.loc[i, 'Item No.'])))
+            #     issue = float(df.loc[i, 'ALC Qty.'])
 
-                else:
-                    pass
+            #     if stock - issue >= 0:
+            #         check.append(True)
+            #     else:
+            #         check.append(False)
 
-        print(res.get('10000062686'))
-        df.fillna('-', inplace=True)
-        self.__onHand_AIssue = res
-        self.__AIssue = df
+            #     if len(check) == len(a) and all(check):
+                    
+            #         for j in a:
+
+                        # _stock = float(res.get(str(df.loc[j, 'Item No.'])))
+                        # _issue = float(df.loc[j, 'ALC Qty.'])
+
+                        # df.loc[j, 'B/Issue'] = _stock
+                        # if _stock - _issue >= 0:
+                        #     df.loc[j, 'A/Issue'] = _stock - _issue
+                        #     res[str(df.loc[j, 'Item No.'])] = float(
+                        #         df.loc[j, 'A/Issue'])
+                        #     df.loc[j, 'Remark'] = 'True'
+                        # else:
+                        #     df.loc[j, 'Remark'] = 'False'
+
+                #         print(j)
+
+                # else:
+                #     pass
+
+        # print(res.get('10000062686'))
+        # df.fillna('-', inplace=True)
+        # self.__onHand_AIssue = res
+        # self.__AIssue = df
+        print(dict_index)
 
     def createDailyIssue(self, p_type) -> pd.DataFrame:
         df = self.__AIssue.copy()
